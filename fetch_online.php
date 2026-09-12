@@ -86,6 +86,34 @@ if ($dbOk && $pdo) {
 
 $stats['updated_at'] = date('c'); // ISO 8601
 
+// เปรียบเทียบกับไฟล์เดิม: ถ้าข้อมูลจริง (ยกเว้น updated_at) ไม่เปลี่ยน -> ไม่ต้องเขียน ไม่ต้อง push
+// กัน Task Scheduler push ทุกนาทีทำให้ GitHub Pages build กระหน่ำ
+function stable_dump($a) {
+    if (!is_array($a)) return $a;
+    ksort($a);
+    foreach ($a as $k => $v) $a[$k] = stable_dump($v);
+    return json_encode($a, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
+
+$needsWrite = true;
+if (is_file($outFile)) {
+    $oldRaw = @file_get_contents($outFile);
+    $old = $oldRaw !== false ? json_decode($oldRaw, true) : null;
+    if (is_array($old)) {
+        $newComp = $stats;
+        $oldComp = $old;
+        unset($newComp['updated_at'], $oldComp['updated_at']);
+        if (stable_dump($newComp) === stable_dump($oldComp)) {
+            $needsWrite = false;
+        }
+    }
+}
+
+if (!$needsWrite) {
+    echo "UNCHANGED -> ข้อมูลเหมือนเดิม ไม่เขียนไฟล์ ไม่ push" . PHP_EOL;
+    exit(0);
+}
+
 $bytes = file_put_contents($outFile, json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 if ($bytes === false) {
     fwrite(STDERR, "Cannot write {$outFile}" . PHP_EOL);
