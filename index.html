@@ -311,8 +311,9 @@
       const srv = d.server;
       if(srv && typeof srv.online === 'boolean'){
         srvCard.className = 'statuscard ' + (srv.online ? 'on' : 'off');
-srvTitle.textContent = srv.online ? 'เซิร์ฟเวอร์ ONLINE' : 'เซิร์ฟเวอร์ OFFLINE';
+        srvTitle.textContent = srv.online ? 'เซิร์ฟเวอร์ ONLINE' : 'เซิร์ฟเวอร์ OFFLINE';
         const dbNote = d.db === false ? ' · ฐานข้อมูลไม่พร้อม (เปิด MariaDB ก่อน)' : '';
+        const parts = (d.maps || []).map(m => (m.map || '') + ' ' + (Number(m.count) || 0));
         srvSub.textContent = (srv.online ? 'เปิดให้บริการ พร้อมลุย PvP' : 'ปิดอยู่ตอนนี้ ยังเข้าเกมไม่ได้') + dbNote + (parts.length ? ' · ' + parts.join('  ') : '');
       } else {
         srvCard.className = 'statuscard ' + (online > 0 ? 'on' : 'unknown');
