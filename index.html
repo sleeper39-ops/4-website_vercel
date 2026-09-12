@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RO-2026 | เซิร์ฟเวอร์ Ragnarok Online PvP</title>
+<meta name="description" content="ข้อมูลเซิร์ฟเวอร์ RO-2026 จำนวนคนออนไลน์ วิธีดาวน์โหลด วิธีเล่น และวิธีสมัครไอดี">
+<style>
+  :root{
+    --bg:#f4f7ff; --bg2:#e9eefb; --card:#ffffff; --card2:#f2f5fd;
+    --line:#d6dff2; --accent:#2f6fed; --accent2:#b9791a; --good:#1e9e4f; --txt:#22304f; --dim:#5a6a8e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--txt); font-family:'Segoe UI',Tahoma,'Noto Sans Thai',sans-serif; line-height:1.6;}
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+
+  /* Hero */
+  header.hero{
+    background:radial-gradient(1100px 460px at 50% -10%, #dbe6ff 0%, var(--bg) 60%);
+    padding:70px 20px 46px; text-align:center; border-bottom:1px solid var(--line);
+  }
+  header.hero h1{font-size:2.6rem; letter-spacing:2px; color:var(--txt); text-shadow:0 1px 2px rgba(255,255,255,.8);}
+  header.hero .sub{color:var(--dim); margin-top:6px;}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px; margin-top:18px; padding:8px 18px;
+    border:1px solid var(--line); border-radius:999px; background:#ffffff; font-size:.95rem; color:var(--txt);
+  }
+  .dot{width:10px; height:10px; border-radius:50%; background:#555; display:inline-block;}
+  .dot.on{background:var(--good); box-shadow:0 0 8px var(--good); animation:pulse 1.6s infinite;}
+  @keyframes pulse{50%{opacity:.45;}}
+
+  /* Nav */
+  nav{position:sticky; top:0; z-index:50; background:rgba(244,247,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex; gap:22px; overflow-x:auto; padding:12px 20px; align-items:center;}
+  nav .brand{font-weight:700; color:var(--txt); margin-right:auto; white-space:nowrap;}
+  nav a{white-space:nowrap; font-size:.92rem;}
+
+  /* Sections */
+  section{padding:46px 20px;}
+  section h2{color:var(--txt); font-size:1.5rem; margin-bottom:6px; display:flex; align-items:center; gap:10px;}
+  section h2::before{content:""; width:6px; height:26px; background:var(--accent); border-radius:3px; display:inline-block;}
+  section .lead{color:var(--dim); margin-bottom:22px;}
+  .sec-alt{background:var(--bg2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+
+  /* Stats */
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; text-align:center;}
+  .card .num{font-size:2rem; font-weight:800; color:var(--txt);}
+  .card .lbl{color:var(--dim); font-size:.85rem; margin-top:2px;}
+  .card.online .num{color:var(--good);}
+
+  /* Content */
+  .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px;}
+  .card.wide{text-align:left;}
+  .card h3{color:var(--accent2); font-size:1.05rem; margin-bottom:8px;}
+  .card ul{padding-left:20px; color:var(--txt);}
+  .card li{margin-bottom:6px;}
+  .card code{background:#eef2fc; border:1px solid var(--line); padding:2px 7px; border-radius:6px; color:#2f6fed; font-size:.9em;}
+  .note{background:#fffbef; border:1px solid rgba(185,121,26,.45); border-radius:10px; padding:12px 16px; color:#7a5b26; font-size:.92rem; margin-top:16px;}
+
+  .steps{counter-reset:st;}
+  .steps .card{text-align:left;}
+  .steps .card h3::before{counter-increment:st; content:counter(st) ". "; color:var(--accent);}
+  .btn{
+    display:inline-block; background:var(--accent); color:#fff; font-weight:700; padding:12px 22px;
+    border-radius:10px; margin-top:14px; border:none; cursor:pointer;
+  }
+  .btn:hover{filter:brightness(1.1); text-decoration:none;}
+  .btn.ghost{background:transparent; border:1px solid var(--accent); color:var(--accent);}
+
+  table{width:100%; border-collapse:collapse; margin-top:8px;}
+  td,th{padding:9px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.92rem;}
+  th{color:var(--accent2); font-weight:600;}
+
+  footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; color:var(--dim); font-size:.85rem;}
+  .muted{color:var(--dim); font-size:.8rem;}
+  #stamp{color:var(--good);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">⚔ RO-2026</span>
+    <a href="#home">หน้าแรก</a>
+    <a href="#server">ข้อมูลเซิร์ฟเวอร์</a>
+    <a href="#howto">วิธีเล่น</a>
+    <a href="#signup">วิธีสมัคร</a>
+    <a href="#download">ดาวน์โหลด</a>
+    <a href="#faq">คำถามที่พบบ่อย</a>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <h1>RO-2026</h1>
+  <div class="sub">เซิร์ฟเวอร์ Ragnarok Online แบบ Private · พลัง PvP สุดคิวตี้ · สไตล์ Renewal</div>
+  <div class="badge"><span class="dot" id="dotStatus"></span><span id="statusText">กำลังเชื่อมต่อ…</span></div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="stats">
+      <div class="card online"><div class="num" id="stOnline">–</div><div class="lbl">คนออนไลน์ตอนนี้</div></div>
+      <div class="card"><div class="num" id="stAccounts">–</div><div class="lbl">บัญชีทั้งหมด</div></div>
+      <div class="card"><div class="num" id="stChars">–</div><div class="lbl">ตัวละครทั้งหมด</div></div>
+      <div class="card"><div class="num" id="stGuilds">–</div><div class="lbl">กิลด์ทั้งหมด</div></div>
+      <div class="card"><div class="num" id="stMap">PvP</div><div class="lbl">โหมดหลัก</div></div>
+    </div>
+    <p class="muted" style="margin-top:10px;">ตัวเลขอัปเดตล่าสุด: <span id="stamp">–</span> (ข้อมูลถูกสแนปช็อตอัตโนมัติจากฐานข้อมูล)</p>
+  </div>
+</section>
+
+<section class="sec-alt" id="server">
+  <div class="wrap">
+    <h2>ข้อมูลเซิร์ฟเวอร์</h2>
+    <p class="lead">ข้อมูลรายละเอียดอย่างเป็นทางการของเซิร์ฟเวอร์ RO-2026</p>
+    <div class="cols">
+      <div class="card wide">
+        <table>
+          <tr><th>หัวข้อ</th><th>ค่า/รายละเอียด</th></tr>
+          <tr><td>ชื่อเซิร์ฟเวอร์</td><td>RO-2026 (RoPvP2026)</td></tr>
+          <tr><td>ระบบ</td><td>Renewal</td></tr>
+          <tr><td>ค่า EXP (Base / Job / MVP / Quest)</td><td>x100 / x100 / x100 / x100</td></tr>
+          <tr><td>โหมดหลัก</td><td>PvP — ด่าน PvP ห้องบังคับ 3 แมพ (pvp_n_1-5 · prt_fild08 · moc_pryd04)</td></tr>
+          <tr><td>ช่องตัวละคร</td><td>9 ช่อง</td></tr>
+          <tr><td>การสมัครไอดี</td><td>สมัครในเกมด้วยไอดีลงท้าย <code>_M</code> หรือ <code>_F</code></td></tr>
+          <tr><td>การลบตัวละคร</td><td>ใช้รหัสยืนยัน <code>000000</code></td></tr>
+        </table>
+      </div>
+      <div class="card wide">
+        <h3>จุดเด่น</h3>
+        <ul>
+          <li>เล่นผ่าน <b>Radmin VPN</b> กันการเชื่อมต่อหลุดง่าย</li>
+          <li>แพชไอเทม/มอนสเตอร์สไตล์อัปเดตล่าสุด</li>
+          <li>สกิน Winter Snow UI</li>
+          <li>หน้าเว็บดูสถิติคนออนไลน์สด</li>
+        </ul>
+        <div class="note">หมายเหตุ: เซิร์ฟเวอร์นี้เป็น private server เพื่อการศึกษา/เล่นกับเพื่อน — รองรับการเชื่อมต่อผ่านเครือข่ายส่วนตัว Radmin</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="howto">
+  <div class="wrap">
+    <h2>วิธีเล่น</h2>
+    <p class="lead">ทำตาม 4 ขั้นตอนนี้ก็เข้าสนาม PvP ได้เลย</p>
+    <div class="cols steps">
+      <div class="card wide">
+        <h3>ติดตั้ง Radmin VPN</h3>
+        <ul>
+          <li>ดาวน์โหลดจากปุ่ม <b>ดาวน์โหลดด้านล่าง</b></li>
+          <li>ติดตั้งให้เรียบร้อย แล้วเปิดโปรแกรมขึ้นมา</li>
+          <li>กดปุ่ม <b>Power สีฟ้า</b> ให้สถานะเป็น <b>On</b></li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>เข้าร่วมเครือข่าย</h3>
+        <ul>
+          <li>เมนู <code>เครือข่าย</code> → <code>เข้าร่วมเครือข่าย</code></li>
+          <li>เลือกแท็บ <code>เครือข่ายส่วนตัว</code></li>
+          <li>กรอกชื่อเครือข่าย: <code>ropvp2026</code></li>
+          <li>กรอกรหัสผ่าน: <code>ropvp2026</code></li>
+          <li>กด <b>เข้าร่วม</b></li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>เช็คสถานะการเชื่อมต่อ</h3>
+        <ul>
+          <li>เมื่อ Join สำเร็จ จะเห็นชื่อคอมเครื่องในรายชื่อห้อง</li>
+          <li>ถ้าชื่อขึ้น <b>ไฟเขียว</b> = เชื่อมต่อสมบูรณ์แล้ว</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>เปิดเกมเล่นเลย</h3>
+        <ul>
+          <li>เปิดตัวเกม <b>RO-2026.exe</b> แล้วล็อกอินเข้าเล่น</li>
+          <li>เกิดที่แผนที่ PvP เริ่มต้น และสู้ได้ทันที</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-alt" id="signup">
+  <div class="wrap">
+    <h2>วิธีสมัครไอดี</h2>
+    <p class="lead">สมัครได้จากในเกมเอง ฟรี ไม่ต้องใช้เว็บ</p>
+    <div class="cols">
+      <div class="card wide">
+        <table>
+          <tr><th>ขั้นตอน</th><th>รายละเอียด</th></tr>
+          <tr><td>สมัครไอดีครั้งแรก</td><td>ใช้ชื่อไอดีแล้วลงท้ายด้วย <code>_M</code> (ผู้ชาย) หรือ <code>_F</code> (ผู้หญิง)</td></tr>
+          <tr><td>ล็อกอินครั้งต่อไป</td><td>ลบ <code>_M</code> / <code>_F</code> ออก แล้วใช้ไอดีเดิมได้เลย</td></tr>
+          <tr><td>ลบตัวละคร</td><td>ระบบจะถามรหัสยืนยัน — ใส่ <code>000000</code></td></tr>
+        </table>
+        <div class="note">ตัวอย่าง: สมัครด้วย <code>kong_M</code> → ครั้งต่อไปล็อกอินด้วย <code>kong</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <h2>ดาวน์โหลด</h2>
+    <p class="lead">โหลดครบเซ็ต แล้วเข้าสนาม PvP ได้ทันที</p>
+    <div class="cols">
+      <div class="card wide">
+        <h3>1. Radmin VPN</h3>
+        <p>โปรแกรมเชื่อมต่อเครือข่ายส่วนตัว ใช้เข้าเซิร์ฟเวอร์ของเรา</p>
+        <a class="btn" target="_blank" rel="noopener" href="https://www.radmin-vpn.com/">ดาวน์โหลด Radmin VPN</a>
+      </div>
+      <div class="card wide">
+        <h3>2. ตัวเกม RO-2026</h3>
+        <p>ดาวน์โหลดตัวเกมครบชุด (ตัวติดตั้ง/ซิป)</p>
+        <!-- TODO: ใส่ลิงก์ดาวน์โหลดตัวเกมของคุณตรง href ด้านล่าง -->
+        <a class="btn" target="_blank" rel="noopener" href="#">ดาวน์โหลดตัวเกม</a>
+        <div class="note">ยังไม่มีลิงก์? นำไฟล์ตัวเกม (zip) อัปขึ้น Google Drive / MediaFire แล้ววางลิงก์ในบรรทัด TODO ข้างบน</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-alt" id="faq">
+  <div class="wrap">
+    <h2>คำถามที่พบบ่อย</h2>
+    <div class="cols">
+      <div class="card wide">
+        <h3>พอดีทุกครั้งเล่นมีชื่อขึ้นสีเทา / เข้าห้องไม่ได้?</h3>
+        <p>ต้องเปิด Radmin VPN และต่อเข้ากลุ่ม <code>ropvp2026</code> ให้สถานะไฟเขียวก่อนทุกครั้ง ก่อนเปิดเกม</p>
+      </div>
+      <div class="card wide">
+        <h3>สมัครไอดีแล้วล็อกอินไม่ได้?</h3>
+        <p>ครั้งแรกต้องลงท้าย <code>_M</code> หรือ <code>_F</code> ครั้งถัดไปลบออก — ถ้ายังเข้าไม่ได้ลองสร้างไอดีใหม่ทั้งชื่อ</p>
+      </div>
+      <div class="card wide">
+        <h3>ลบตัวละครแล้วจะได้กลับไหม?</h3>
+        <p>ไม่ได้ ระบบลบถาวร ใช้รหัส <code>000000</code> ยืนยันตามที่ระบบสั่ง</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    © 2026 RO-2026 Private Server · ข้อมูลจัดทำโดยทีมบริหารเซิร์ฟเวอร์<br>
+    <span class="muted">Ragnarok Online เป็นเครื่องหมายการค้าของ GRAVITY Co., Ltd. เซิร์ฟเวอร์นี้เป็น private server ไม่เกี่ยวข้องกับบริษัทฯ</span>
+  </div>
+</footer>
+
+<script>
+  // โหลดสถิติจาก data/server.json (ไฟล์ที่ script ฝั่งเครื่องอัปเดตให้อัตโนมัติ)
+  async function loadStats(){
+    const ids = { online:'stOnline', accounts:'stAccounts', chars:'stChars', guilds:'stGuilds' };
+    try{
+      const res = await fetch('data/server.json', { cache:'no-store' });
+      if(!res.ok) throw new Error('http '+res.status);
+      const d = await res.json();
+      for(const k in ids){
+        const el = document.getElementById(ids[k]);
+        if(el && d[k] !== undefined) el.textContent = Number(d[k]).toLocaleString('th-TH');
+      }
+      if(document.getElementById('stamp') && d.updated_at){
+        document.getElementById('stamp').textContent = d.updated_at.replace('T',' ').slice(0,19);
+      }
+      const online = Number(d.online) || 0;
+      document.getElementById('dotStatus').className = 'dot ' + (online > 0 ? 'on' : '');
+      document.getElementById('statusText').textContent = online > 0
+        ? ('เซิร์ฟเวอร์ออนไลน์ · ' + online + ' คน')
+        : 'เซิร์ฟเวอร์เปิดอยู่ แต่ยังไม่มีคนออนไลน์';
+    }catch(e){
+      document.getElementById('dotStatus').className = 'dot';
+      document.getElementById('statusText').textContent = '— ยังไม่สามารถโหลดข้อมูลสถิติ (ให้รัน fetch_online.php ตาม README)';
+    }
+  }
+  loadStats();
+</script>
+</body>
+</html>
