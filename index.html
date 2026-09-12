@@ -109,11 +109,21 @@
       <div class="card"><div class="num" id="stGuilds">–</div><div class="lbl">กิลด์ทั้งหมด</div></div>
       <div class="card"><div class="num" id="stMap">PvP</div><div class="lbl">โหมดหลัก</div></div>
     </div>
-    <p class="muted" style="margin-top:10px;">ตัวเลขอัปเดตล่าสุด: <span id="stamp">–</span> (ข้อมูลถูกสแนปช็อตอัตโนมัติจากฐานข้อมูล)</p>
+    <p class="muted" style="margin-top:10px;">ตัวเลขอัปเดตล่าสุด: <span id="stamp">–</span> (ข้อมูลถูกสแนปช็อตอัตโนมัติจากฐานข้อมูล · เว็บดึงอัตโนมัติทุก 20 วินาที)</p>
   </div>
 </section>
 
-<section class="sec-alt" id="server">
+<section class="sec-alt" id="maps">
+  <div class="wrap">
+    <h2>ออนไลน์ตามแผนที่</h2>
+    <p class="lead">จำนวนผู้เล่นที่อยู่บนแผนที่ต่าง ๆ ในตอนนี้ (อัปเดตเรียลไทม์)</p>
+    <div class="stats" id="mapStats">
+      <div class="card"><div class="num">–</div><div class="lbl">กำลังโหลด…</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="server">
   <div class="wrap">
     <h2>ข้อมูลเซิร์ฟเวอร์</h2>
     <p class="lead">ข้อมูลรายละเอียดอย่างเป็นทางการของเซิร์ฟเวอร์ RO-2026</p>
@@ -252,31 +262,69 @@
 </footer>
 
 <script>
-  // โหลดสถิติจาก data/server.json (ไฟล์ที่ script ฝั่งเครื่องอัปเดตให้อัตโนมัติ)
+  // แหล่งข้อมูล: ดึงจาก GitHub raw (สดสุด) ก่อน ล้มเหลวค่อยใช้ data/server.json ในเครื่อง
+  const SOURCES = [
+    'https://raw.githubusercontent.com/sleeper39-ops/4-website_vercel/main/data/server.json',
+    'https://raw.githubusercontent.com/sleeper39-ops/4-website_vercel/master/data/server.json',
+    'data/server.json'
+  ];
+
+  async function fetchJson(url){
+    const res = await fetch(url + '?t=' + Date.now(), { cache:'no-store' });
+    if(!res.ok) throw new Error('http ' + res.status);
+    return res.json();
+  }
+
+  const mapNames = {
+    'pvp_n_1-5':'ห้อง PvP กลาง', 'prt_fild08':'ทุ่งพรุนะ (เริ่มเกม)', 'moc_pryd04':'ปิรามิดมรกต',
+    'prontera':'ปรอนเตรา', 'morocc':'มอคโค', 'aldebaran':'อัลเดบารัน', 'geffen':'เกฟเฟน', 'payon':'ปายอง',
+    'izlude':'อิซลูด', 'comodo':'โคโมโด', 'lutie':'ลูเทีย', 'yuno':'ยูโน', 'rachel':'ราเฆล', 'veins':'เวนส์',
+    'xmas':'คริสต์มาส', 'niflheim':'นิฟไฮม์'
+  };
+  function mapName(m){ return mapNames[m] || m; }
+
   async function loadStats(){
-    const ids = { online:'stOnline', accounts:'stAccounts', chars:'stChars', guilds:'stGuilds' };
-    try{
-      const res = await fetch('data/server.json', { cache:'no-store' });
-      if(!res.ok) throw new Error('http '+res.status);
-      const d = await res.json();
-      for(const k in ids){
-        const el = document.getElementById(ids[k]);
-        if(el && d[k] !== undefined) el.textContent = Number(d[k]).toLocaleString('th-TH');
-      }
-      if(document.getElementById('stamp') && d.updated_at){
-        document.getElementById('stamp').textContent = d.updated_at.replace('T',' ').slice(0,19);
-      }
-      const online = Number(d.online) || 0;
-      document.getElementById('dotStatus').className = 'dot ' + (online > 0 ? 'on' : '');
-      document.getElementById('statusText').textContent = online > 0
-        ? ('เซิร์ฟเวอร์ออนไลน์ · ' + online + ' คน')
-        : 'เซิร์ฟเวอร์เปิดอยู่ แต่ยังไม่มีคนออนไลน์';
-    }catch(e){
+    let d = null;
+    for(const s of SOURCES){
+      try{ const x = await fetchJson(s); if(x && typeof x.online === 'number'){ d = x; break; } }
+      catch(e){ /* ลองแหล่งถัดไป */ }
+    }
+    if(!d){
       document.getElementById('dotStatus').className = 'dot';
-      document.getElementById('statusText').textContent = '— ยังไม่สามารถโหลดข้อมูลสถิติ (ให้รัน fetch_online.php ตาม README)';
+      document.getElementById('statusText').textContent = '— ยังโหลดข้อมูลไม่ได้ (ตรวจให้รัน fetch_online.php แล้วกดอัปเดตตาม README)';
+      return;
+    }
+    const set = (id, v) => { const el = document.getElementById(id); if(el && v !== undefined) el.textContent = Number(v).toLocaleString('th-TH'); };
+    set('stOnline', d.online); set('stAccounts', d.accounts); set('stChars', d.characters); set('stGuilds', d.guilds);
+
+    const stamp = document.getElementById('stamp');
+    if(stamp && d.updated_at) stamp.textContent = d.updated_at.replace('T',' ').slice(0,19) + ' น.';
+
+    const online = Number(d.online) || 0;
+    document.getElementById('dotStatus').className = 'dot ' + (online > 0 ? 'on' : '');
+    document.getElementById('statusText').textContent = online > 0
+      ? ('เซิร์ฟเวอร์ออนไลน์ · ' + online + ' คน')
+      : 'เซิร์ฟเวอร์เปิดอยู่ แต่ยังไม่มีคนออนไลน์';
+
+    // สถิติออนไลน์แยกตามแผนที่
+    const box = document.getElementById('mapStats');
+    const maps = Array.isArray(d.maps) ? d.maps.slice(0,8) : [];
+    if(maps.length >= 1){
+      const max = Math.max.apply(null, maps.map(m => Number(m.count)||0)) || 1;
+      box.innerHTML = maps.map(m => {
+        const w = Math.round((Number(m.count)||0) * 100 / max);
+        return '<div class="card"><div class="num">' + Number(m.count).toLocaleString('th-TH') +
+               '</div><div class="lbl">' + mapName(m.map) +
+               '<div style="height:6px;background:#e4ebfa;border-radius:4px;margin-top:8px;overflow:hidden;">' +
+               '<div style="height:100%;width:' + w + '%;background:#2f6fed;border-radius:4px;"></div></div>' +
+               '<div class="muted" style="font-size:.7rem;margin-top:4px;">' + m.map + '</div></div></div>';
+      }).join('');
+    } else {
+      box.innerHTML = '<div class="card"><div class="num">0</div><div class="lbl">ยังไม่มีใครออนไลน์ตอนนี้</div></div>';
     }
   }
   loadStats();
+  setInterval(loadStats, 20000);
 </script>
 </body>
 </html>
