@@ -22,6 +22,8 @@ $GAME = [
     'map'   => [ '127.0.0.1', 5121 ],
 ];
 
+date_default_timezone_set('Asia/Bangkok');
+
 $outFile = __DIR__ . '/data/server.json';
 
 // เช็คว่าพอร์ตเปิด (เซิร์ฟเวอร์กำลังฟังอยู่) หรือไม่
