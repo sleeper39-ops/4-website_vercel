@@ -1,29 +1,36 @@
 @echo off
-rem =====================================================================
+rem ============================================================
 rem  RO-2026 :: อัปเดตสถิติลง data/server.json แล้ว push ขึ้น GitHub
-rem  (Vercel จะ deploy ใหม่อัตโนมัติหลัง push ผ่าน)
-rem  ใช้กับ Task Scheduler เพื่อให้อัปเดตสถิติอัตโนมัติ เช่น ทุก 10 นาที
-rem =====================================================================
+rem  ใช้กับ Task Scheduler ทุก 1 นาที เพื่อให้ค่าคนออนไลน์สด
+rem ============================================================
 setlocal
 cd /d "%~dp0"
 
 set "PHP=C:\Users\WD_Black\Documents\RO_OFFLINE_2026\1-start_database_run_laragon.exe\bin\php\php-8.3.28-Win32-vs16-x64\php.exe"
+set "GIT=C:\Program Files\Git\cmd\git.exe"
 
-echo [1/3] ดึงสถิติจากฐานข้อมูล...
+echo [1/3] ดึงสถิติจากฐานข้อมูล
 "%PHP%" fetch_online.php
 if errorlevel 1 (
-    echo [ERR] ดึงสถิติไม่สำเร็จ - ตรวจว่า MariaDB รันอยู่ (เริ่มจาก 1-start_database_run_laragon.exe)
+    echo [ERR] ดึงสถิติไม่สำเร็จ ตรวจว่า MariaDB รันอยู่ โดยเริ่มจาก 1-start_database_run_laragon.exe ก่อน
     exit /b 1
 )
 
-echo [2/3] Commit + Push ขึ้น GitHub...
-git add -A
-git commit -m "chore: refresh server stats (%date%)" 1>nul 2>nul
-git push
-if errorlevel 1 (
-    echo [ERR] Push ล้มเหลว - ตรวจ git remote / ตรวจ login git
-    exit /b 1
-)
+echo [2/3] Commit + Push เฉพาะตอนข้อมูลเปลี่ยน
+"%GIT%" add data/server.json
+"%GIT%" diff --cached --quiet
+if not errorlevel 1 goto nopush
+"%GIT%" commit -m "chore: refresh server stats" 1>nul 2>nul
+if errorlevel 1 goto errpush
+"%GIT%" push origin main
+if errorlevel 1 goto errpush
 
-echo [3/3] เสร็จเรียบร้อย - สถิติอัปเดตแล้ว
+goto nopush
+
+:errpush
+echo [ERR] Push ล้มเหลว ตรวจ git remote และการล็อกอิน
+exit /b 1
+
+:nopush
+echo [3/3] เสร็จเรียบร้อย สถิติอัปเดตแล้ว %date% %time%
 endlocal
