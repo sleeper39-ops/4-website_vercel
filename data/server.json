@@ -5,7 +5,7 @@
     "guilds": 1,
     "maps": [
         {
-            "map": "prt_fild08",
+            "map": "sec_in02",
             "count": 1
         }
     ],
@@ -16,5 +16,5 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-12T20:35:17+07:00"
+    "updated_at": "2026-09-12T20:36:17+07:00"
 }
