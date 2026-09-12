@@ -9,5 +9,12 @@
             "count": 2
         }
     ],
-    "updated_at": "2026-09-12T07:53:17+00:00"
+    "db": true,
+    "server": {
+        "login": true,
+        "char": true,
+        "map": true,
+        "online": true
+    },
+    "updated_at": "2026-09-12T07:54:17+00:00"
 }
