@@ -332,17 +332,13 @@
       const srv = d.server;
       if(srv && typeof srv.online === 'boolean'){
         srvCard.className = 'statuscard ' + (srv.online ? 'on' : 'off');
-        srvTitle.textContent = srv.online ? 'เซิร์ฟเวอร์ ONLINE' : 'เซิร์ฟเวอร์ OFFLINE';
-        const parts = [];
-        if(typeof srv.login === 'boolean') parts.push('Login ' + (srv.login ? 'Pa' : 'ปิด'));
-        if(typeof srv.char === 'boolean') parts.push('Char ' + (srv.char ? 'Pa' : 'ปิด'));
-        if(typeof srv.map === 'boolean') parts.push('Map ' + (srv.map ? 'Pa' : 'ปิด'));
+srvTitle.textContent = srv.online ? 'เซิร์ฟเวอร์ ONLINE' : 'เซิร์ฟเวอร์ OFFLINE';
         const dbNote = d.db === false ? ' · ฐานข้อมูลไม่พร้อม (เปิด MariaDB ก่อน)' : '';
         srvSub.textContent = (srv.online ? 'เปิดให้บริการ พร้อมลุย PvP' : 'ปิดอยู่ตอนนี้ ยังเข้าเกมไม่ได้') + dbNote + (parts.length ? ' · ' + parts.join('  ') : '');
       } else {
         srvCard.className = 'statuscard ' + (online > 0 ? 'on' : 'unknown');
         srvTitle.textContent = online > 0 ? 'เซิร์ฟเวอร์ออนไลน์' : 'สถานะไม่แน่ชัด';
-        srvSub.textContent = online > 0 ? ('มีผู้เล่น ' + online + ' คนอยู่ในเกม') : 'ยังไม่มีข้อมูลสถานะเซิร์ฟเวอร์ (รอข้อมูลชุดใหม่)';
+        srvSub.textContent = online > 0 ? 'พร้อมให้บริการ' : 'ยังไม่มีข้อมูลสถานะเซิร์ฟเวอร์ (รอข้อมูลชุดใหม่)';
       }
     }
 
