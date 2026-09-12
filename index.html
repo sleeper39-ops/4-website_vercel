@@ -32,6 +32,20 @@
   .dot.on{background:var(--good); box-shadow:0 0 8px var(--good); animation:pulse 1.6s infinite;}
   @keyframes pulse{50%{opacity:.45;}}
 
+  .statuscard{
+    display:inline-flex; align-items:center; gap:14px; margin-top:18px; padding:14px 24px;
+    border:1px solid var(--line); border-radius:14px; background:#ffffff; text-align:left; min-width:280px;
+  }
+  .statuscard .sc-dot{width:16px; height:16px; border-radius:50%; background:#555; flex-shrink:0; animation:pulse 1.6s infinite;}
+  .statuscard.on{background:#eefdf2; border-color:rgba(46,170,94,.45);}
+  .statuscard.on .sc-dot{background:var(--good); box-shadow:0 0 12px var(--good);}
+  .statuscard.off{background:#fdf0ef; border-color:rgba(214,69,69,.45);}
+  .statuscard.off .sc-dot{background:#d64545; box-shadow:0 0 12px #d64545;}
+  .statuscard.unknown{background:#fffaf0; border-color:rgba(230,162,60,.45);}
+  .statuscard.unknown .sc-dot{background:#e6a23c;}
+  .sc-title{font-size:1.15rem; font-weight:800; color:var(--txt);}
+  .sc-sub{color:var(--dim); font-size:.85rem; margin-top:3px;}
+
   /* Nav */
   nav{position:sticky; top:0; z-index:50; background:rgba(244,247,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
   nav .wrap{display:flex; gap:22px; overflow-x:auto; padding:12px 20px; align-items:center;}
@@ -97,7 +111,13 @@
 <header class="hero" id="home">
   <h1>RO-2026</h1>
   <div class="sub">เซิร์ฟเวอร์ Ragnarok Online แบบ Private · พลัง PvP สุดคิวตี้ · สไตล์ Renewal</div>
-  <div class="badge"><span class="dot" id="dotStatus"></span><span id="statusText">กำลังเชื่อมต่อ…</span></div>
+  <div class="statuscard unknown" id="statusCard">
+    <span class="sc-dot"></span>
+    <div>
+      <div class="sc-title" id="srvTitle">กำลังตรวจสอบสถานะ…</div>
+      <div class="sc-sub" id="srvSub">กำลังเชื่อมต่อข้อมูลจากเซิร์ฟเวอร์</div>
+    </div>
+  </div>
 </header>
 
 <section>
@@ -290,8 +310,12 @@
       catch(e){ /* ลองแหล่งถัดไป */ }
     }
     if(!d){
-      document.getElementById('dotStatus').className = 'dot';
-      document.getElementById('statusText').textContent = '— ยังโหลดข้อมูลไม่ได้ (ตรวจให้รัน fetch_online.php แล้วกดอัปเดตตาม README)';
+      const srvCard = document.getElementById('statusCard');
+      if(srvCard){
+        srvCard.className = 'statuscard unknown';
+        document.getElementById('srvTitle').textContent = 'ไม่สามารถเชื่อมต่อข้อมูล';
+        document.getElementById('srvSub').textContent = 'ยังดึงข้อมูลไม่ได้ ตรวจให้รัน fetch_online.php แล้วลองอัปเดตใหม่อีกครั้ง';
+      }
       return;
     }
     const set = (id, v) => { const el = document.getElementById(id); if(el && v !== undefined) el.textContent = Number(v).toLocaleString('th-TH'); };
@@ -301,10 +325,26 @@
     if(stamp && d.updated_at) stamp.textContent = d.updated_at.replace('T',' ').slice(0,19) + ' น.';
 
     const online = Number(d.online) || 0;
-    document.getElementById('dotStatus').className = 'dot ' + (online > 0 ? 'on' : '');
-    document.getElementById('statusText').textContent = online > 0
-      ? ('เซิร์ฟเวอร์ออนไลน์ · ' + online + ' คน')
-      : 'เซิร์ฟเวอร์เปิดอยู่ แต่ยังไม่มีคนออนไลน์';
+    const srvCard = document.getElementById('statusCard');
+    const srvTitle = document.getElementById('srvTitle');
+    const srvSub = document.getElementById('srvSub');
+    if(srvCard && srvTitle && srvSub){
+      const srv = d.server;
+      if(srv && typeof srv.online === 'boolean'){
+        srvCard.className = 'statuscard ' + (srv.online ? 'on' : 'off');
+        srvTitle.textContent = srv.online ? 'เซิร์ฟเวอร์ ONLINE' : 'เซิร์ฟเวอร์ OFFLINE';
+        const parts = [];
+        if(typeof srv.login === 'boolean') parts.push('Login ' + (srv.login ? 'Pa' : 'ปิด'));
+        if(typeof srv.char === 'boolean') parts.push('Char ' + (srv.char ? 'Pa' : 'ปิด'));
+        if(typeof srv.map === 'boolean') parts.push('Map ' + (srv.map ? 'Pa' : 'ปิด'));
+        const dbNote = d.db === false ? ' · ฐานข้อมูลไม่พร้อม (เปิด MariaDB ก่อน)' : '';
+        srvSub.textContent = (srv.online ? 'เปิดให้บริการ พร้อมลุย PvP' : 'ปิดอยู่ตอนนี้ ยังเข้าเกมไม่ได้') + dbNote + (parts.length ? ' · ' + parts.join('  ') : '');
+      } else {
+        srvCard.className = 'statuscard ' + (online > 0 ? 'on' : 'unknown');
+        srvTitle.textContent = online > 0 ? 'เซิร์ฟเวอร์ออนไลน์' : 'สถานะไม่แน่ชัด';
+        srvSub.textContent = online > 0 ? ('มีผู้เล่น ' + online + ' คนอยู่ในเกม') : 'ยังไม่มีข้อมูลสถานะเซิร์ฟเวอร์ (รอข้อมูลชุดใหม่)';
+      }
+    }
 
     // สถิติออนไลน์แยกตามแผนที่
     const box = document.getElementById('mapStats');
