@@ -23,5 +23,10 @@
         "src": "gallery\/pvp5.png",
         "thumb": "gallery\/thumbs\/pvp5.jpg",
         "name": "pvp5"
+    },
+    {
+        "src": "gallery\/pvp6.png",
+        "thumb": "gallery\/thumbs\/pvp6.jpg",
+        "name": "pvp6"
     }
 ]
