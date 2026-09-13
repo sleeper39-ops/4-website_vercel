@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "headers": [
+    { "source": "/data/(.*)", "headers": [ { "key": "Cache-Control", "value": "no-store" } ] }
+  ]
+}

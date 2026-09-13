@@ -1,11 +1,11 @@
 @echo off
 rem ============================================================
-rem  RO-2026 :: อัปเดตสถิติลง data/server.json แล้ว push GitHub
-rem  ใช้กับ Task Scheduler ทุก 1 นาที เพื่อให้ค่าคนออนไลน์สด
-rem  -
-rem  Push จำกัดเพื่อไม่ให้ GitHub Pages ชน build limit (~10/ชม.):
-rem   - ข้อมูลจริงเปลี่ยน (online/accounts/..)  -> push ทันที
-rem   - ข้อมูลเหมือนเดิมแต่ผ่านไป >= 10 นาที    -> heartbeat push (อัปเดต updated_at)
+rem  RO-2026 :: Update data/server.json then push to GitHub.
+rem  Used by Task Scheduler (ROPvP2026-SiteStats) periodically
+rem  to keep the site stats fresh.
+rem  Push policy (fast refresh):
+rem   - real data changed within the last 1 minute -> push now
+rem   - otherwise heartbeat push every 15 minutes (freshen timestamp)
 rem ============================================================
 setlocal
 cd /d "%~dp0"
@@ -15,34 +15,34 @@ set "GIT=C:\Program Files\Git\cmd\git.exe"
 set "FLAG=data\flag_changed"
 set "LAST=%~dp0.lastpush"
 
-echo [1/3] ดึงสถิติจากฐานข้อมูล
+echo [1/3] Pull stats from database
 "%PHP%" fetch_online.php | findstr /r "^DATA_" >nul
 if errorlevel 1 (
-    echo [ERR] ดึงสถิติไม่สำเร็จ ตรวจว่า MariaDB รันอยู่ โดยเริ่มจาก 1-start_database_run_laragon.exe ก่อน
+    echo [ERR] Fetch failed - make sure MariaDB is running (start 1-start_database_run_laragon.exe first)
     exit /b 1
 )
 
-rem ===== ตัดสินใจว่าจะ push หรือไม่ =====
+rem ===== Decide whether to push or not =====
 set "PUSH=0"
-rem 1) flag_changed อายุ < 3 นาที  -> ข้อมูลจริงเพิ่งเปลี่ยน
+rem 1) real data changed within the last 1 minute -> push immediately
 if exist "%FLAG%" (
-    for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%FLAG%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -lt 3){'1'}else{'0'}"') do set PUSH=%%a
+    for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%FLAG%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -lt 1){'1'}else{'0'}"') do set PUSH=%%a
 )
-rem 2) heartbeat: นับจาก push ครั้งล่าสุด >= 30 นาที (ป้องกัน GitHub Pages build limit ~10/ชม.)
+rem 2) heartbeat: last successful push >= 15 minutes ago
 if "%PUSH%"=="0" (
     if exist "%LAST%" (
-        for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%LAST%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -ge 30){'1'}else{'0'}"') do set PUSH=%%a
+        for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%LAST%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -ge 15){'1'}else{'0'}"') do set PUSH=%%a
     ) else (
         set PUSH=1
     )
 )
 
 if "%PUSH%"=="0" (
-    echo [2/3] ข้อมูลไม่เปลี่ยนและยังไม่ถึงรอบ heartbeat - ข้าม push
+    echo [2/3] Data unchanged and not yet heartbeat yet - skip push
     goto done
 )
 
-echo [2/3] Commit + Push ไปยัง GitHub
+echo [2/3] Commit + Push to GitHub
 "%GIT%" add data/server.json data/gallery.json gallery
 "%GIT%" diff --cached --quiet
 if not errorlevel 1 goto done
@@ -51,14 +51,14 @@ if errorlevel 1 goto errpush
 "%GIT%" push origin main
 if errorlevel 1 goto errpush
 
-rem บันทึกเวลาที่ push สำเร็จ
+rem record last successful push time
 type nul > "%LAST%"
 goto done
 
 :errpush
-echo [ERR] Push ล้มเหลว ตรวจ git remote และการล็อกอิน
+echo [ERR] Push failed - check git remote and login
 exit /b 1
 
 :done
-echo [3/3] เสร็จเรียบร้อย สถิติอัปเดตแล้ว %date% %time%
+echo [3/3] Done. Stats refreshed at %date% %time%
 endlocal
