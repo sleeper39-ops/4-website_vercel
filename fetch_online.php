@@ -86,8 +86,7 @@ if ($dbOk && $pdo) {
 
 $stats['updated_at'] = date('c'); // ISO 8601
 
-// เปรียบเทียบกับไฟล์เดิม: ถ้าข้อมูลจริง (ยกเว้น updated_at) ไม่เปลี่ยน -> ไม่ต้องเขียน ไม่ต้อง push
-// กัน Task Scheduler push ทุกนาทีทำให้ GitHub Pages build กระหน่ำ
+// ตรวจว่าข้อมูลจริงเปลี่ยน (ไม่นับ updated_at) หรือไม่
 function stable_dump($a) {
     if (!is_array($a)) return $a;
     ksort($a);
@@ -95,7 +94,7 @@ function stable_dump($a) {
     return json_encode($a, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
 
-$needsWrite = true;
+$dataChanged = false;
 if (is_file($outFile)) {
     $oldRaw = @file_get_contents($outFile);
     $old = $oldRaw !== false ? json_decode($oldRaw, true) : null;
@@ -103,22 +102,25 @@ if (is_file($outFile)) {
         $newComp = $stats;
         $oldComp = $old;
         unset($newComp['updated_at'], $oldComp['updated_at']);
-        if (stable_dump($newComp) === stable_dump($oldComp)) {
-            $needsWrite = false;
+        if (stable_dump($newComp) !== stable_dump($oldComp)) {
+            $dataChanged = true;
         }
     }
+} else {
+    $dataChanged = true; // ยังไม่มีไฟล์เดิม = มีข้อมูลใหม่ชัวร์
 }
 
-if (!$needsWrite) {
-    echo "UNCHANGED -> ข้อมูลเหมือนเดิม ไม่เขียนไฟล์ ไม่ push" . PHP_EOL;
-    exit(0);
-}
-
+// เขียนไฟล์ให้สดทุกครั้ง (timestamp = ตอนนี้) เพื่อหน้าเว็บไม่ดูค้าง
 $bytes = file_put_contents($outFile, json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 if ($bytes === false) {
     fwrite(STDERR, "Cannot write {$outFile}" . PHP_EOL);
     exit(1);
 }
 
-echo "OK -> {$outFile}" . PHP_EOL;
+// ถ้าข้อมูลจริงเปลี่ยน -> เขียนป้าย flag ให้ update_site.bat push ได้ทันที
+if ($dataChanged) {
+    @file_put_contents(__DIR__ . '/data/flag_changed', $stats['updated_at'] . PHP_EOL);
+}
+
+echo ($dataChanged ? "DATA_CHANGED -> " : "DATA_SAME    -> ") . "{$outFile}" . PHP_EOL;
 echo json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
