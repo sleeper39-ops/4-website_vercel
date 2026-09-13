@@ -1,14 +1,17 @@
 [
     {
         "src": "gallery\/pvp1.png",
+        "thumb": "gallery\/thumbs\/pvp1.jpg",
         "name": "pvp1"
     },
     {
         "src": "gallery\/pvp2.png",
+        "thumb": "gallery\/thumbs\/pvp2.jpg",
         "name": "pvp2"
     },
     {
         "src": "gallery\/pvp3.png",
+        "thumb": "gallery\/thumbs\/pvp3.jpg",
         "name": "pvp3"
     }
 ]
