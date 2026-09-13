@@ -129,6 +129,8 @@ if (is_dir($galleryDir)) {
         // สร้าง thumbnail (กว้าง max 520px) เพื่อให้เว็บโหลดเร็ว
         $thumb = $thumbsDir . '/' . $name . '.jpg';
         $needThumb = !is_file($thumb) || filemtime($thumb) < filemtime($full);
+        $mt = @filemtime($full) ?: time();
+        $thumbUrl = is_file($thumb) ? 'gallery/thumbs/' . $name . '.jpg' : 'gallery/' . $f;
         if ($needThumb && function_exists('imagecreatefromstring')) {
             $src = @imagecreatefromstring(file_get_contents($full));
             if ($src) {
@@ -139,14 +141,14 @@ if (is_dir($galleryDir)) {
                 imagecopyresampled($dst, $src, 0, 0, 0, 0, $tw, $th, $w, $h);
                 imagejpeg($dst, $thumb, 82);
                 imagedestroy($dst); imagedestroy($src);
-            } else {
-                $thumb = 'gallery/' . $f;
+                $thumbUrl = 'gallery/thumbs/' . $name . '.jpg';
             }
         }
         $gallery[] = [
             'src'   => 'gallery/' . $f,
-            'thumb' => (strpos($thumb, 'thumbs/') !== false ? 'gallery/thumbs/' . $name . '.jpg' : 'gallery/' . $f),
+            'thumb' => $thumbUrl,
             'name'  => $name,
+            'm'     => $mt, // mtime ของรูปต้นฉบับ: ใช้เป็น cache-buster + ตรวจจับรูปที่ถูกแทนที่ (ชื่อเดิม)
         ];
     }
     usort($gallery, function ($a, $b) { return strcmp($a['src'], $b['src']); });

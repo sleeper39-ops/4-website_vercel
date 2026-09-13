@@ -432,8 +432,9 @@
     const slice = __gallery.slice(gPage * PAGE_SIZE, (gPage + 1) * PAGE_SIZE);
     grid.innerHTML = slice.map((g, i) => {
       const idx = gPage * PAGE_SIZE + i;
+      const ver = g.m ? '?m=' + g.m : '';
       return '<div class="shot" title="' + esc(g.name || '') + '" onclick="openLb(' + idx + ')">' +
-        '<img loading="lazy" src="' + esc(g.thumb || g.src) + '" alt="' + esc(g.name || '') + '">' +
+        '<img loading="lazy" src="' + esc(g.thumb || g.src) + ver + '" alt="' + esc(g.name || '') + '">' +
         '<div class="cap">' + esc(g.name || g.src) + '</div>' +
       '</div>';
     }).join('');
@@ -475,7 +476,8 @@
     const im = document.getElementById('lbImg');
     const cap = document.getElementById('lbCap');
     const cnt = document.getElementById('lbCount');
-    im.src = img.src;
+    const ver = img.m ? '?m=' + img.m : '';
+    im.src = img.src + ver;
     if(cap) cap.textContent = img.name || img.src;
     if(cnt) cnt.textContent = (i + 1) + ' / ' + __gallery.length;
   }
