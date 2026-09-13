@@ -43,7 +43,7 @@ if "%PUSH%"=="0" (
 )
 
 echo [2/3] Commit + Push ไปยัง GitHub
-"%GIT%" add data/server.json
+"%GIT%" add data/server.json data/gallery.json gallery
 "%GIT%" diff --cached --quiet
 if not errorlevel 1 goto done
 "%GIT%" commit -m "chore: refresh server stats" 1>nul 2>nul

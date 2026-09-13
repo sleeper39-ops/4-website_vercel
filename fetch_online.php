@@ -110,6 +110,35 @@ if (is_file($outFile)) {
     $dataChanged = true; // ยังไม่มีไฟล์เดิม = มีข้อมูลใหม่ชัวร์
 }
 
+// ---------- แกลอรีรูปภาพ: สแกนโฟลเดอร์ gallery/ แล้วเขียน data/gallery.json ----------
+$galleryDir = __DIR__ . '/gallery';
+$galleryFile = __DIR__ . '/data/gallery.json';
+$gallery = [];
+if (is_dir($galleryDir)) {
+    $exts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+    $files = scandir($galleryDir);
+    foreach ($files as $f) {
+        if ($f[0] === '.') continue;                  // ข้าม .gitkeep, .hidden
+        $full = $galleryDir . '/' . $f;
+        if (!is_file($full)) continue;
+        $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+        if (!in_array($ext, $exts, true)) continue;
+        $gallery[] = ['src' => 'gallery/' . $f, 'name' => pathinfo($f, PATHINFO_FILENAME)];
+    }
+    usort($gallery, function ($a, $b) { return strcmp($a['src'], $b['src']); });
+}
+if ($gallery) {
+    $newGalleryJson = json_encode($gallery, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    $oldGalleryRaw = @file_get_contents($galleryFile);
+    if ($oldGalleryRaw !== $newGalleryJson) {
+        file_put_contents($galleryFile, $newGalleryJson);
+        $dataChanged = true; // มีรูปใหม่/รูปหาย -> ให้ push
+    }
+} elseif (is_file($galleryFile)) {
+    @unlink($galleryFile); // ไม่มีรูปในโฟลเดอร์ -> ลบไฟล์ลิสต์ทิ้ง
+    $dataChanged = true;
+}
+
 // เขียนไฟล์ให้สดทุกครั้ง (timestamp = ตอนนี้) เพื่อหน้าเว็บไม่ดูค้าง
 $bytes = file_put_contents($outFile, json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 if ($bytes === false) {
