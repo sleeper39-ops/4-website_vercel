@@ -4,7 +4,11 @@
         "name": "pvp1"
     },
     {
-        "src": "gallery\/sample-pvp.png",
-        "name": "sample-pvp"
+        "src": "gallery\/pvp2.png",
+        "name": "pvp2"
+    },
+    {
+        "src": "gallery\/pvp3.png",
+        "name": "pvp3"
     }
 ]
