@@ -112,9 +112,11 @@ if (is_file($outFile)) {
 
 // ---------- แกลอรีรูปภาพ: สแกนโฟลเดอร์ gallery/ แล้วเขียน data/gallery.json ----------
 $galleryDir = __DIR__ . '/gallery';
+$thumbsDir = $galleryDir . '/thumbs';
 $galleryFile = __DIR__ . '/data/gallery.json';
 $gallery = [];
 if (is_dir($galleryDir)) {
+    @mkdir($thumbsDir, 0777, true);
     $exts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
     $files = scandir($galleryDir);
     foreach ($files as $f) {
@@ -123,7 +125,29 @@ if (is_dir($galleryDir)) {
         if (!is_file($full)) continue;
         $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
         if (!in_array($ext, $exts, true)) continue;
-        $gallery[] = ['src' => 'gallery/' . $f, 'name' => pathinfo($f, PATHINFO_FILENAME)];
+        $name = pathinfo($f, PATHINFO_FILENAME);
+        // สร้าง thumbnail (กว้าง max 520px) เพื่อให้เว็บโหลดเร็ว
+        $thumb = $thumbsDir . '/' . $name . '.jpg';
+        $needThumb = !is_file($thumb) || filemtime($thumb) < filemtime($full);
+        if ($needThumb && function_exists('imagecreatefromstring')) {
+            $src = @imagecreatefromstring(file_get_contents($full));
+            if ($src) {
+                $w = imagesx($src); $h = imagesy($src);
+                $tw = min(520, $w);
+                $th = max(1, (int)round($h * $tw / $w));
+                $dst = imagecreatetruecolor($tw, $th);
+                imagecopyresampled($dst, $src, 0, 0, 0, 0, $tw, $th, $w, $h);
+                imagejpeg($dst, $thumb, 82);
+                imagedestroy($dst); imagedestroy($src);
+            } else {
+                $thumb = 'gallery/' . $f;
+            }
+        }
+        $gallery[] = [
+            'src'   => 'gallery/' . $f,
+            'thumb' => (strpos($thumb, 'thumbs/') !== false ? 'gallery/thumbs/' . $name . '.jpg' : 'gallery/' . $f),
+            'name'  => $name,
+        ];
     }
     usort($gallery, function ($a, $b) { return strcmp($a['src'], $b['src']); });
 }

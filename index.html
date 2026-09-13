@@ -76,15 +76,21 @@
   .note{background:#fffbef; border:1px solid rgba(185,121,26,.45); border-radius:10px; padding:12px 16px; color:#7a5b26; font-size:.92rem; margin-top:16px;}
 
   /* Gallery */
-  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:6px;}
+  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:6px;}
   .gallery .shot{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; cursor:pointer; box-shadow:0 1px 4px rgba(34,48,79,.06);}
   .gallery .shot:hover{box-shadow:0 4px 14px rgba(47,111,237,.18); transform:translateY(-2px);}
-  .gallery .shot img{width:100%; height:150px; object-fit:cover; display:block;}
+  .gallery .shot img{width:100%; height:190px; object-fit:cover; display:block;}
   .gallery .shot .cap{padding:7px 10px; font-size:.82rem; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .lightbox{position:fixed; inset:0; background:rgba(10,18,38,.86); display:none; align-items:center; justify-content:center; z-index:99; cursor:zoom-out;}
+  .lightbox{position:fixed; inset:0; background:rgba(10,18,38,.88); display:none; align-items:center; justify-content:center; z-index:99; cursor:zoom-out;}
   .lightbox.open{display:flex;}
-  .lightbox img{max-width:92vw; max-height:88vh; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,.6);}
+  .lightbox img{max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,.6); background:#000;}
   .lightbox .cap{position:fixed; bottom:18px; left:0; right:0; text-align:center; color:#dfe7ff; font-size:.9rem;}
+  .lightbox .nav{position:fixed; top:0; bottom:0; width:64px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; font-size:2.4rem; background:transparent; border:none; user-select:none; text-shadow:0 2px 8px rgba(0,0,0,.8);}
+  .lightbox .nav:hover{background:rgba(255,255,255,.08);}
+  .lightbox .nav.prev{left:0;}
+  .lightbox .nav.next{right:0;}
+  .lightbox .close{position:fixed; top:14px; right:20px; font-size:2rem; color:#fff; cursor:pointer; background:none; border:none; text-shadow:0 2px 8px rgba(0,0,0,.8);}
+  .lightbox .count{position:fixed; top:14px; left:20px; color:#cfd8f0; font-size:.9rem; background:rgba(0,0,0,.35); padding:4px 12px; border-radius:999px;}
   .gempty{padding:22px; border:1px dashed var(--line); border-radius:12px; color:var(--dim); text-align:center;}
 
   .steps{counter-reset:st;}
@@ -394,6 +400,9 @@
 
   function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+  let __gallery = [];
+  let __gIndex = 0;
+
   async function loadGallery(){
     const grid = document.getElementById('galleryGrid');
     if(!grid) return;
@@ -408,33 +417,50 @@
     }
     grid.innerHTML = imgs.map((g, i) =>
       '<div class="shot" title="' + esc(g.name || '') + '" onclick="openLb(' + i + ')">' +
-        '<img loading="lazy" src="' + esc(g.src) + '?t=' + Date.now() + '" alt="' + esc(g.name || '') + '">' +
+        '<img loading="lazy" src="' + esc(g.thumb || g.src) + '" alt="' + esc(g.name || '') + '">' +
         '<div class="cap">' + esc(g.name || g.src) + '</div>' +
       '</div>').join('');
-    window.__gallery = imgs;
+    __gallery = imgs;
   }
 
-  function openLb(i){
-    const imgs = window.__gallery || [];
-    const img = imgs[i];
+  function showLb(i){
+    const img = __gallery[i];
     if(!img) return;
-    const lb = document.getElementById('lightbox');
-    if(!lb) return;
+    __gIndex = i;
     const im = document.getElementById('lbImg');
     const cap = document.getElementById('lbCap');
-    im.src = img.src + '?t=' + Date.now();
+    const cnt = document.getElementById('lbCount');
+    im.src = img.src;
     if(cap) cap.textContent = img.name || img.src;
-    lb.classList.add('open');
+    if(cnt) cnt.textContent = (i + 1) + ' / ' + __gallery.length;
+  }
+
+  function openLb(i){ showLb(i); const lb = document.getElementById('lightbox'); if(lb) lb.classList.add('open'); }
+
+  function stepLb(d){
+    __gIndex = (__gIndex + d + __gallery.length) % __gallery.length;
+    showLb(__gIndex);
   }
 
   function closeLb(){ const lb = document.getElementById('lightbox'); if(lb) lb.classList.remove('open'); }
+
+  document.addEventListener('keydown', (e) => {
+    if(!document.getElementById('lightbox').classList.contains('open')) return;
+    if(e.key === 'ArrowRight') stepLb(1);
+    else if(e.key === 'ArrowLeft') stepLb(-1);
+    else if(e.key === 'Escape') closeLb();
+  });
 
   loadGallery();
   setInterval(loadGallery, 5 * 60 * 1000);
 </script>
 
 <div class="lightbox" id="lightbox" onclick="closeLb()">
+  <button class="nav prev" id="lbPrev" onclick="event.stopPropagation(); stepLb(-1)">&#10094;</button>
   <img id="lbImg" src="" alt="ภาพบรรยากาศ">
+  <button class="nav next" id="lbNext" onclick="event.stopPropagation(); stepLb(1)">&#10095;</button>
+  <button class="close" onclick="event.stopPropagation(); closeLb()">&times;</button>
+  <div class="count" id="lbCount"></div>
   <div class="cap" id="lbCap"></div>
 </div>
 </body>
