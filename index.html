@@ -76,11 +76,17 @@
   .note{background:#fffbef; border:1px solid rgba(185,121,26,.45); border-radius:10px; padding:12px 16px; color:#7a5b26; font-size:.92rem; margin-top:16px;}
 
   /* Gallery */
-  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:6px;}
+  .gallery-wrap{position:relative;}
+  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:6px;}
   .gallery .shot{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; cursor:pointer; box-shadow:0 1px 4px rgba(34,48,79,.06);}
   .gallery .shot:hover{box-shadow:0 4px 14px rgba(47,111,237,.18); transform:translateY(-2px);}
   .gallery .shot img{width:100%; height:190px; object-fit:cover; display:block;}
   .gallery .shot .cap{padding:7px 10px; font-size:.82rem; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .gpage{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:18px;}
+  .gpage button{background:#fff; border:1px solid var(--line); border-radius:999px; width:42px; height:42px; font-size:1.1rem; color:var(--accent); cursor:pointer; box-shadow:0 2px 6px rgba(34,48,79,.08);}
+  .gpage button:hover:not(:disabled){background:var(--accent); color:#fff; border-color:var(--accent);}
+  .gpage button:disabled{opacity:.35; cursor:not-allowed;}
+  .gpage .ginfo{min-width:80px; text-align:center; color:var(--dim); font-size:.88rem;}
   .lightbox{position:fixed; inset:0; background:rgba(10,18,38,.88); display:none; align-items:center; justify-content:center; z-index:99; cursor:zoom-out;}
   .lightbox.open{display:flex;}
   .lightbox img{max-width:96vw; max-height:92vh; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,.6); background:#000;}
@@ -219,8 +225,15 @@
   <div class="wrap">
     <h2>แกลอรีบรรยากาศในเกม</h2>
     <p class="lead">ภาพถ่ายบรรยากาศการต่อสู้จริงภายในเซิร์ฟเวอร์ RO-PVP-2026</p>
-    <div class="gallery" id="galleryGrid">
-      <div class="gempty">กำลังโหลดภาพ…</div>
+    <div class="gallery-wrap">
+      <div class="gallery" id="galleryGrid">
+        <div class="gempty">กำลังโหลดภาพ…</div>
+      </div>
+      <div class="gpage" id="galleryPage" style="display:none;">
+        <button id="gPrev" onclick="galleryStep(-1)">&#10094;</button>
+        <div class="ginfo" id="gInfo">1/1</div>
+        <button id="gNext" onclick="galleryStep(1)">&#10095;</button>
+      </div>
     </div>
   </div>
 </section>
@@ -402,6 +415,41 @@
 
   let __gallery = [];
   let __gIndex = 0;
+  const PAGE_SIZE = 6;
+  let gPage = 0;
+
+  function renderGallery(){
+    const grid = document.getElementById('galleryGrid');
+    const pgWrap = document.getElementById('galleryPage');
+    if(!grid) return;
+    if(!__gallery.length){
+      grid.innerHTML = '<div class="gempty">ยังไม่มีภาพบันทึกไว้ — แอดมินกำลังถ่ายบรรยากาศในเกม เตรียมอัปเดตเร็วๆ นี้</div>';
+      if(pgWrap) pgWrap.style.display = 'none';
+      return;
+    }
+    const pages = Math.ceil(__gallery.length / PAGE_SIZE);
+    gPage = Math.min(gPage, pages - 1);
+    const slice = __gallery.slice(gPage * PAGE_SIZE, (gPage + 1) * PAGE_SIZE);
+    grid.innerHTML = slice.map((g, i) => {
+      const idx = gPage * PAGE_SIZE + i;
+      return '<div class="shot" title="' + esc(g.name || '') + '" onclick="openLb(' + idx + ')">' +
+        '<img loading="lazy" src="' + esc(g.thumb || g.src) + '" alt="' + esc(g.name || '') + '">' +
+        '<div class="cap">' + esc(g.name || g.src) + '</div>' +
+      '</div>';
+    }).join('');
+    if(pgWrap){
+      pgWrap.style.display = pages > 1 ? 'flex' : 'none';
+      document.getElementById('gInfo').textContent = (gPage + 1) + ' / ' + pages;
+      document.getElementById('gPrev').disabled = gPage <= 0;
+      document.getElementById('gNext').disabled = gPage >= pages - 1;
+    }
+  }
+
+  function galleryStep(d){
+    const pages = Math.max(1, Math.ceil(__gallery.length / PAGE_SIZE));
+    gPage = Math.min(pages - 1, Math.max(0, gPage + d));
+    renderGallery();
+  }
 
   async function loadGallery(){
     const grid = document.getElementById('galleryGrid');
@@ -412,15 +460,12 @@
       catch(e){ /* ลองแหล่งถัดไป */ }
     }
     if(!imgs || !imgs.length){
-      grid.innerHTML = '<div class="gempty">ยังไม่มีภาพบันทึกไว้ — แอดมินกำลังถ่ายบรรยากาศในเกม เตรียมอัปเดตเร็วๆ นี้</div>';
+      __gallery = [];
+      renderGallery();
       return;
     }
-    grid.innerHTML = imgs.map((g, i) =>
-      '<div class="shot" title="' + esc(g.name || '') + '" onclick="openLb(' + i + ')">' +
-        '<img loading="lazy" src="' + esc(g.thumb || g.src) + '" alt="' + esc(g.name || '') + '">' +
-        '<div class="cap">' + esc(g.name || g.src) + '</div>' +
-      '</div>').join('');
     __gallery = imgs;
+    renderGallery();
   }
 
   function showLb(i){

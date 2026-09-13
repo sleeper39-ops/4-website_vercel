@@ -28,10 +28,10 @@ rem 1) flag_changed อายุ < 3 นาที  -> ข้อมูลจร�
 if exist "%FLAG%" (
     for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%FLAG%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -lt 3){'1'}else{'0'}"') do set PUSH=%%a
 )
-rem 2) heartbeat: นับจาก push ครั้งล่าสุด >= 10 นาที
+rem 2) heartbeat: นับจาก push ครั้งล่าสุด >= 30 นาที (ป้องกัน GitHub Pages build limit ~10/ชม.)
 if "%PUSH%"=="0" (
     if exist "%LAST%" (
-        for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%LAST%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -ge 10){'1'}else{'0'}"') do set PUSH=%%a
+        for /f %%a in ('powershell -NoProfile -Command "$f=Get-Item '%LAST%'; if(((Get-Date)-$f.LastWriteTime).TotalMinutes -ge 30){'1'}else{'0'}"') do set PUSH=%%a
     ) else (
         set PUSH=1
     )
