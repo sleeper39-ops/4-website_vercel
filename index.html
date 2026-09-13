@@ -360,10 +360,16 @@
   
 
   async function loadStats(){
+    // ดึงทุกแหล่งพร้อมกัน แล้วเลือกตัวที่มี updated_at ล่าสุด (กันเจอไฟล์เก่าค้าง ๆ ตัวใดตัวหนึ่ง)
+    const results = await Promise.allSettled(SOURCES.map(fetchJson));
     let d = null;
-    for(const s of SOURCES){
-      try{ const x = await fetchJson(s); if(x && typeof x.online === 'number'){ d = x; break; } }
-      catch(e){ /* ลองแหล่งถัดไป */ }
+    for(const r of results){
+      if(r.status === 'fulfilled'){
+        const x = r.value;
+        if(x && typeof x.online === 'number'){
+          if(!d || (x.updated_at || '') > (d.updated_at || '')) d = x;
+        }
+      }
     }
     if(!d){
       const srvCard = document.getElementById('statusCard');
