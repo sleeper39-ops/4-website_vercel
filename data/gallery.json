@@ -1,27 +1,27 @@
 [
     {
-        "src": "gallery\/Screenshot (776).png",
-        "thumb": "gallery\/thumbs\/Screenshot (776).jpg",
-        "name": "Screenshot (776)"
+        "src": "gallery\/pvp1.png",
+        "thumb": "gallery\/thumbs\/pvp1.jpg",
+        "name": "pvp1"
     },
     {
-        "src": "gallery\/Screenshot (777).png",
-        "thumb": "gallery\/thumbs\/Screenshot (777).jpg",
-        "name": "Screenshot (777)"
+        "src": "gallery\/pvp2.png",
+        "thumb": "gallery\/thumbs\/pvp2.jpg",
+        "name": "pvp2"
     },
     {
-        "src": "gallery\/Screenshot (778).png",
-        "thumb": "gallery\/thumbs\/Screenshot (778).jpg",
-        "name": "Screenshot (778)"
+        "src": "gallery\/pvp3.png",
+        "thumb": "gallery\/thumbs\/pvp3.jpg",
+        "name": "pvp3"
     },
     {
-        "src": "gallery\/Screenshot (779).png",
-        "thumb": "gallery\/thumbs\/Screenshot (779).jpg",
-        "name": "Screenshot (779)"
+        "src": "gallery\/pvp4.png",
+        "thumb": "gallery\/thumbs\/pvp4.jpg",
+        "name": "pvp4"
     },
     {
-        "src": "gallery\/Screenshot (780).png",
-        "thumb": "gallery\/thumbs\/Screenshot (780).jpg",
-        "name": "Screenshot (780)"
+        "src": "gallery\/pvp5.png",
+        "thumb": "gallery\/thumbs\/pvp5.jpg",
+        "name": "pvp5"
     }
 ]
