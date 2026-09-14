@@ -1,15 +1,15 @@
 {
     "online": 0,
-    "accounts": 0,
-    "characters": 0,
-    "guilds": 0,
+    "accounts": 10,
+    "characters": 18,
+    "guilds": 1,
     "maps": [],
-    "db": false,
+    "db": true,
     "server": {
         "login": false,
         "char": false,
         "map": false,
         "online": false
     },
-    "updated_at": "2026-09-14T13:53:22+07:00"
+    "updated_at": "2026-09-14T14:00:20+07:00"
 }
