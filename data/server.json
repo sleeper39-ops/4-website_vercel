@@ -7,9 +7,9 @@
     "db": true,
     "server": {
         "login": false,
-        "char": true,
-        "map": true,
+        "char": false,
+        "map": false,
         "online": false
     },
-    "updated_at": "2026-09-14T23:48:19+07:00"
+    "updated_at": "2026-09-14T23:49:20+07:00"
 }
