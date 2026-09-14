@@ -50,7 +50,10 @@
   nav{position:sticky; top:0; z-index:50; background:rgba(244,247,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
   nav .wrap{display:flex; gap:22px; overflow-x:auto; padding:12px 20px; align-items:center;}
   nav .brand{font-weight:700; color:var(--txt); margin-right:auto; white-space:nowrap;}
+  nav .brand img{height:28px; width:28px; border-radius:8px; vertical-align:middle; margin-right:8px; object-fit:cover;}
   nav a{white-space:nowrap; font-size:.92rem;}
+
+  header.hero .cover{display:block; margin:26px auto 0; width:min(780px,96%); max-height:300px; object-fit:cover; border-radius:16px; border:1px solid var(--line); box-shadow:0 10px 30px rgba(34,48,79,.15);}
 
   /* Sections */
   section{padding:46px 20px;}
@@ -122,7 +125,7 @@
 
 <nav>
   <div class="wrap">
-    <span class="brand">⚔ RO-PVP-Class2 (2026)</span>
+    <span class="brand"><img src="images/logo.png" alt="RO-PVP-Class2 logo">RO-PVP-Class2 (2026)</span>
     <a href="#home">หน้าแรก</a>
     <a href="#server">ข้อมูลเซิร์ฟเวอร์</a>
     <a href="#pvp">ระบบ PvP</a>
@@ -135,6 +138,7 @@
 </nav>
 
 <header class="hero" id="home">
+  <img class="cover" src="images/cover.png" alt="RO-PVP-Class2 (2026) cover">
   <h1>RO-PVP-Class2 (2026)</h1>
   <div class="sub">เซิร์ฟเวอร์ Ragnarok Online แบบ Private · พลัง PvP สุดคิวตี้ · สไตล์ Renewal</div>
   <div class="statuscard unknown" id="statusCard">
