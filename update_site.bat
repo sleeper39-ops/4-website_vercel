@@ -10,7 +10,7 @@ rem ============================================================
 setlocal
 cd /d "%~dp0"
 
-set "PHP=C:\Users\WD_Black\Documents\RO_OFFLINE_2026\1-start_database_run_laragon.exe\bin\php\php-8.3.28-Win32-vs16-x64\php.exe"
+set "PHP=D:\RO_PvP_Class2\1-start_database_run_laragon.exe\bin\php\php-8.3.28-Win32-vs16-x64\php.exe"
 set "GIT=C:\Program Files\Git\cmd\git.exe"
 set "FLAG=data\flag_changed"
 set "LAST=%~dp0.lastpush"
