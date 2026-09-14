@@ -18,7 +18,7 @@ set "LAST=%~dp0.lastpush"
 echo [1/3] Pull stats from database
 "%PHP%" fetch_online.php | findstr /r "^DATA_" >nul
 if errorlevel 1 (
-    echo [ERR] Fetch failed - make sure MariaDB is running (start 1-start_database_run_laragon.exe first)
+    echo [ERR] Fetch failed - make sure MariaDB is running: start 1-start_database_run_laragon.exe first
     exit /b 1
 )
 
