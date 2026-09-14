@@ -6,11 +6,7 @@
     "maps": [
         {
             "map": "prt_fild08",
-            "count": 1
-        },
-        {
-            "map": "pvp_n_1-5",
-            "count": 1
+            "count": 2
         }
     ],
     "db": true,
@@ -20,5 +16,5 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-14T16:23:17+07:00"
+    "updated_at": "2026-09-14T16:28:17+07:00"
 }
