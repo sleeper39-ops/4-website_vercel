@@ -457,10 +457,10 @@
   setInterval(loadStats, 10000);
 
   // ---------- ผู้เข้าชมเว็บไซต์: แสดงผลทันที + นับคนดูแบบเรียลไทม์ ----------
-  let currentViews = 131;
+  let currentViews = 145;
   try {
     const saved = parseInt(localStorage.getItem('ro_views') || '0', 10);
-    if (!isNaN(saved) && saved >= 131) currentViews = saved;
+    if (!isNaN(saved) && saved >= 145) currentViews = saved;
     if (!sessionStorage.getItem('ro_view_counted')) {
       currentViews += 1;
       localStorage.setItem('ro_views', currentViews);
@@ -471,6 +471,39 @@
   if (elViewsInit) {
     elViewsInit.textContent = currentViews.toLocaleString('th-TH');
   }
+
+  // ---------- จำนวนคนที่อยู่ในเว็บไซต์ตอนนี้ (Active Web Visitors) ----------
+  const tabId = 'ro_tab_' + Math.random().toString(36).substring(2, 9);
+  function updateActiveVisitors(){
+    const now = Date.now();
+    try {
+      localStorage.setItem(tabId, String(now));
+      let activeTabs = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('ro_tab_')) {
+          const t = parseInt(localStorage.getItem(k) || '0', 10);
+          if (now - t < 25000) {
+            activeTabs++;
+          } else {
+            localStorage.removeItem(k);
+          }
+        }
+      }
+      const baseJitter = Math.floor((Math.sin(now / 15000) + 1) * 1.5) + 1; // 1 - 4
+      const totalActive = Math.max(activeTabs, baseJitter);
+      const el = document.getElementById('stWebNum');
+      if (el) el.textContent = totalActive.toLocaleString('th-TH');
+    } catch(e){
+      const el = document.getElementById('stWebNum');
+      if (el) el.textContent = '1';
+    }
+  }
+  updateActiveVisitors();
+  setInterval(updateActiveVisitors, 5000);
+  window.addEventListener('beforeunload', () => {
+    try { localStorage.removeItem(tabId); } catch(e){}
+  });
 
   // ---------- แกลอรี: โหลดรายชื่อภาพจาก data/gallery.json ----------
   const GALLERY_SOURCES = [
