@@ -109,7 +109,7 @@ $dataChanged = false;
 if (is_array($old)) {
     $newComp = $stats;
     $oldComp = $old;
-    unset($newComp['updated_at'], $oldComp['updated_at'], $newComp['views'], $oldComp['views']);
+    unset($newComp['updated_at'], $oldComp['updated_at']);
     if (stable_dump($newComp) !== stable_dump($oldComp)) {
         $dataChanged = true;
     }
