@@ -11,10 +11,10 @@
     ],
     "db": true,
     "server": {
-        "login": true,
-        "char": true,
-        "map": false,
+        "login": false,
+        "char": false,
+        "map": true,
         "online": false
     },
-    "updated_at": "2026-09-15T07:50:34+07:00"
+    "updated_at": "2026-09-15T07:51:26+07:00"
 }
