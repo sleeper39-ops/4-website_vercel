@@ -165,17 +165,29 @@ if ($gallery) {
     $dataChanged = true;
 }
 
-// เขียนไฟล์ให้สดทุกครั้ง (timestamp = ตอนนี้) เพื่อหน้าเว็บไม่ดูค้าง
-$bytes = file_put_contents($outFile, json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-if ($bytes === false) {
-    fwrite(STDERR, "Cannot write {$outFile}" . PHP_EOL);
-    exit(1);
+// ตรวจว่าถึงรอบ heartbeat (ทุก 10 นาที) เพื่อ freshen timestamp หรือไม่
+$needHeartbeat = false;
+if (is_file($outFile)) {
+    if ((time() - filemtime($outFile)) >= 600) {
+        $needHeartbeat = true;
+    }
+} else {
+    $dataChanged = true;
 }
 
-// ถ้าข้อมูลจริงเปลี่ยน -> เขียนป้าย flag ให้ update_site.bat push ได้ทันที
-if ($dataChanged) {
+if ($dataChanged || $needHeartbeat) {
+    $stats['updated_at'] = date('c');
+    $bytes = file_put_contents($outFile, json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    if ($bytes === false) {
+        fwrite(STDERR, "Cannot write {$outFile}" . PHP_EOL);
+        exit(1);
+    }
     @file_put_contents(__DIR__ . '/data/flag_changed', $stats['updated_at'] . PHP_EOL);
+} else {
+    if (is_array($old) && isset($old['updated_at'])) {
+        $stats['updated_at'] = $old['updated_at'];
+    }
 }
 
-echo ($dataChanged ? "DATA_CHANGED -> " : "DATA_SAME    -> ") . "{$outFile}" . PHP_EOL;
+echo ($dataChanged ? "DATA_CHANGED -> " : ($needHeartbeat ? "DATA_HEARTBEAT -> " : "DATA_SAME    -> ")) . "{$outFile}" . PHP_EOL;
 echo json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
