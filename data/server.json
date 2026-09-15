@@ -13,8 +13,8 @@
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-15T07:46:17+07:00"
+    "updated_at": "2026-09-15T07:50:34+07:00"
 }
