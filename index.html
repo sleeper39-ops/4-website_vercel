@@ -68,6 +68,8 @@
   .card .num{font-size:2rem; font-weight:800; color:var(--txt);}
   .card .lbl{color:var(--dim); font-size:.85rem; margin-top:2px;}
   .card.online .num{color:var(--good);}
+  .card.live-web .num{color:var(--accent); display:flex; align-items:center; justify-content:center; gap:8px;}
+  .card.live-web .dot-pulse{width:10px; height:10px; border-radius:50%; background:var(--accent); display:inline-block; animation:pulse 1.4s infinite; box-shadow:0 0 8px rgba(47,111,237,.5);}
 
   /* Content */
   .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px;}
@@ -154,11 +156,12 @@
 <section>
   <div class="wrap">
     <div class="stats">
-      <div class="card online"><div class="num" id="stOnline">–</div><div class="lbl">คนออนไลน์ตอนนี้</div></div>
+      <div class="card online"><div class="num" id="stOnline">–</div><div class="lbl">ผู้เล่นในเกมตอนนี้</div></div>
+      <div class="card live-web"><div class="num"><span class="dot-pulse"></span><span id="stWebNum">1</span></div><div class="lbl">กำลังดูเว็บตอนนี้</div></div>
+      <div class="card"><div class="num" id="stViews">145</div><div class="lbl">ผู้เข้าชมเว็บไซต์สะสม</div></div>
       <div class="card"><div class="num" id="stAccounts">–</div><div class="lbl">บัญชีทั้งหมด</div></div>
       <div class="card"><div class="num" id="stChars">–</div><div class="lbl">ตัวละครทั้งหมด</div></div>
       <div class="card"><div class="num" id="stGuilds">–</div><div class="lbl">กิลด์ทั้งหมด</div></div>
-      <div class="card"><div class="num" id="stViews">131</div><div class="lbl">ผู้เข้าชมเว็บไซต์</div></div>
       <div class="card"><div class="num" id="stMap">PvP</div><div class="lbl">โหมดหลัก</div></div>
     </div>
     <p class="muted" style="margin-top:10px;">ตัวเลขอัปเดตล่าสุด: <span id="stamp">–</span> (ข้อมูลถูกสแนปช็อตอัตโนมัติจากฐานข้อมูล · เว็บดึงอัตโนมัติทุก 20 วินาที)</p>
