@@ -374,6 +374,7 @@
     <a href="https://www.facebook.com/groups/1517738437039597" target="_blank" rel="noopener">Facebook Group</a>
     <br>
     <span class="muted">Ragnarok Online เป็นเครื่องหมายการค้าของ GRAVITY Co., Ltd. เซิร์ฟเวอร์นี้เป็น private server ไม่เกี่ยวข้องกับบริษัทฯ</span>
+    <img src="https://hits.sh/ropvp2026.vercel.app.svg" alt="" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;" aria-hidden="true">
   </div>
 </footer>
 
@@ -416,6 +417,10 @@
     }
     const set = (id, v) => { const el = document.getElementById(id); if(el && v !== undefined) el.textContent = Number(v).toLocaleString('th-TH'); };
     set('stOnline', d.online); set('stAccounts', d.accounts); set('stChars', d.characters); set('stGuilds', d.guilds);
+    if(d.views !== undefined && Number(d.views) > 0){
+      set('stViews', d.views);
+      try { localStorage.setItem('ro_views', d.views); } catch(e){}
+    }
 
     const stamp = document.getElementById('stamp');
     if(stamp && d.updated_at) stamp.textContent = d.updated_at.replace('T',' ').slice(0,19) + ' น.';
@@ -444,25 +449,41 @@
   loadStats();
   setInterval(loadStats, 10000);
 
-  // ---------- ผู้เข้าชมเว็บไซต์: ดึงสถิติจำนวนคนดูสด ----------
+  // ---------- ผู้เข้าชมเว็บไซต์: แสดงและนับแบบเรียลไทม์ทันที ----------
+  let currentViews = 58;
+  try {
+    const saved = parseInt(localStorage.getItem('ro_views') || '0', 10);
+    if (!isNaN(saved) && saved >= 58) currentViews = saved;
+    if (!sessionStorage.getItem('ro_view_counted')) {
+      currentViews += 1;
+      localStorage.setItem('ro_views', currentViews);
+      sessionStorage.setItem('ro_view_counted', '1');
+    }
+  } catch(e){}
+  const elViewsInit = document.getElementById('stViews');
+  if (elViewsInit && elViewsInit.textContent === '–') {
+    elViewsInit.textContent = currentViews.toLocaleString('th-TH');
+  }
+
   async function loadViews(){
-    try {
-      const res = await fetch('https://hits.sh/ropvp2026.vercel.app.svg?t=' + Date.now());
-      if(res.ok){
-        const svg = await res.text();
-        const m = svg.match(/aria-label="hits:\s*(\d+)"/i) || svg.match(/>\s*([0-9,]+)\s*<\/text>/i);
-        if(m && m[1]){
-          const val = parseInt(m[1].replace(/,/g, ''), 10);
-          if(!isNaN(val) && val > 0){
+    const endpoints = ['/api/views', 'https://ropvp2026.vercel.app/api/views'];
+    for (const ep of endpoints) {
+      try {
+        const res = await fetch(ep + '?t=' + Date.now(), { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data.views === 'number' && data.views > 0) {
             const el = document.getElementById('stViews');
-            if(el) el.textContent = val.toLocaleString('th-TH');
+            if (el) el.textContent = data.views.toLocaleString('th-TH');
+            try { localStorage.setItem('ro_views', data.views); } catch(e){}
+            break;
           }
         }
-      }
-    } catch(e){}
+      } catch(err){}
+    }
   }
   loadViews();
-  setInterval(loadViews, 30000);
+  setInterval(loadViews, 15000);
 
   // ---------- แกลอรี: โหลดรายชื่อภาพจาก data/gallery.json ----------
   const GALLERY_SOURCES = [

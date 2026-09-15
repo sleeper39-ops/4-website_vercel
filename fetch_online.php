@@ -86,6 +86,17 @@ if ($dbOk && $pdo) {
 
 $stats['updated_at'] = date('c'); // ISO 8601
 
+// ตรวจสอบยอดผู้เข้าชมสะสมจาก hits.sh
+$oldRaw = is_file($outFile) ? @file_get_contents($outFile) : false;
+$old = $oldRaw !== false ? json_decode($oldRaw, true) : null;
+$curViews = (isset($old['views']) && is_numeric($old['views'])) ? (int)$old['views'] : 50;
+$ctx = stream_context_create(['http' => ['timeout' => 2]]);
+$hitSvg = @file_get_contents('https://hits.sh/ropvp2026.vercel.app.svg', false, $ctx);
+if ($hitSvg && preg_match('/aria-label="hits:\s*(\d+)"/i', $hitSvg, $hm)) {
+    $curViews = max($curViews, (int)$hm[1]);
+}
+$stats['views'] = $curViews;
+
 // ตรวจว่าข้อมูลจริงเปลี่ยน (ไม่นับ updated_at) หรือไม่
 function stable_dump($a) {
     if (!is_array($a)) return $a;
@@ -95,16 +106,16 @@ function stable_dump($a) {
 }
 
 $dataChanged = false;
-if (is_file($outFile)) {
-    $oldRaw = @file_get_contents($outFile);
-    $old = $oldRaw !== false ? json_decode($oldRaw, true) : null;
-    if (is_array($old)) {
-        $newComp = $stats;
-        $oldComp = $old;
-        unset($newComp['updated_at'], $oldComp['updated_at']);
-        if (stable_dump($newComp) !== stable_dump($oldComp)) {
-            $dataChanged = true;
-        }
+if (is_array($old)) {
+    $newComp = $stats;
+    $oldComp = $old;
+    unset($newComp['updated_at'], $oldComp['updated_at']);
+    // ไม่กระตุ้นการ commit ถี่ยิบจากยอดวิวที่ขยับทีละ 1-4 ครั้ง
+    if (isset($newComp['views'], $oldComp['views']) && abs($newComp['views'] - $oldComp['views']) < 5) {
+        $newComp['views'] = $oldComp['views'];
+    }
+    if (stable_dump($newComp) !== stable_dump($oldComp)) {
+        $dataChanged = true;
     }
 } else {
     $dataChanged = true; // ยังไม่มีไฟล์เดิม = มีข้อมูลใหม่ชัวร์
