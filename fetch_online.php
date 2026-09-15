@@ -109,11 +109,7 @@ $dataChanged = false;
 if (is_array($old)) {
     $newComp = $stats;
     $oldComp = $old;
-    unset($newComp['updated_at'], $oldComp['updated_at']);
-    // ไม่กระตุ้นการ commit ถี่ยิบจากยอดวิวที่ขยับทีละ 1-4 ครั้ง
-    if (isset($newComp['views'], $oldComp['views']) && abs($newComp['views'] - $oldComp['views']) < 5) {
-        $newComp['views'] = $oldComp['views'];
-    }
+    unset($newComp['updated_at'], $oldComp['updated_at'], $newComp['views'], $oldComp['views']);
     if (stable_dump($newComp) !== stable_dump($oldComp)) {
         $dataChanged = true;
     }
