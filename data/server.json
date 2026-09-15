@@ -6,10 +6,10 @@
     "maps": [],
     "db": true,
     "server": {
-        "login": false,
+        "login": true,
         "char": true,
-        "map": false,
-        "online": false
+        "map": true,
+        "online": true
     },
-    "updated_at": "2026-09-15T08:20:19+07:00"
+    "updated_at": "2026-09-15T08:21:17+07:00"
 }
