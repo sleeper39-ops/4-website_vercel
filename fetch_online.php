@@ -95,6 +95,7 @@ $hitSvg = @file_get_contents('https://hits.sh/ropvp2026.vercel.app.svg', false, 
 if ($hitSvg && preg_match('/aria-label="hits:\s*(\d+)"/i', $hitSvg, $hm)) {
     $curViews = max($curViews, (int)$hm[1]);
 }
+if ($curViews > 999999) { $curViews = (($curViews - 1) % 999999) + 1; }
 $stats['views'] = $curViews;
 
 // ตรวจว่าข้อมูลจริงเปลี่ยน (ไม่นับ updated_at) หรือไม่

@@ -39,6 +39,8 @@
   .statuscard .sc-dot{width:16px; height:16px; border-radius:50%; background:#555; flex-shrink:0; animation:pulse 1.6s infinite;}
   .statuscard.on{background:#eefdf2; border-color:rgba(46,170,94,.45);}
   .statuscard.on .sc-dot{background:var(--good); box-shadow:0 0 12px var(--good);}
+  .statuscard.full{border-color:#ef4444; background:rgba(239,68,68,.1);}
+  .statuscard.full .sc-dot{background:#ef4444; box-shadow:0 0 12px #ef4444;}
   .statuscard.off{background:#fdf0ef; border-color:rgba(214,69,69,.45);}
   .statuscard.off .sc-dot{background:#d64545; box-shadow:0 0 12px #d64545;}
   .statuscard.unknown{background:#fffaf0; border-color:rgba(230,162,60,.45);}
@@ -454,23 +456,32 @@
   loadStats();
   setInterval(loadStats, 10000);
 
-  // ---------- ผู้เข้าชมเว็บไซต์: แสดงผลทันที + นับคนดูแบบเรียลไทม์ ----------
+  // ---------- Helper: จัดการยอดผู้เข้าชมสะสม (ตันที่ 999,999 หากเกินจะวนนับ 1 ใหม่) ----------
+  function normalizeViews(val) {
+    let n = parseInt(val, 10) || 1;
+    if (n > 999999) {
+      n = ((n - 1) % 999999) + 1;
+    }
+    return n;
+  }
+
+  // ---------- ผู้เข้าชมเว็บไซต์: แสดงผลทันที + นับคนดูแบบเรียลไทม์ (ตัน 999,999 แล้วรัน 1 ใหม่) ----------
   let currentViews = 145;
   try {
     const saved = parseInt(localStorage.getItem('ro_views') || '0', 10);
-    if (!isNaN(saved) && saved >= 145) currentViews = saved;
+    if (!isNaN(saved) && saved >= 145) currentViews = normalizeViews(saved);
     if (!sessionStorage.getItem('ro_view_counted')) {
-      currentViews += 1;
+      currentViews = normalizeViews(currentViews + 1);
       localStorage.setItem('ro_views', currentViews);
       sessionStorage.setItem('ro_view_counted', '1');
     }
   } catch(e){}
   const elViewsInit = document.getElementById('stViews');
   if (elViewsInit) {
-    elViewsInit.textContent = currentViews.toLocaleString('th-TH');
+    elViewsInit.textContent = normalizeViews(currentViews).toLocaleString('th-TH');
   }
 
-  // ---------- จำนวนคนที่อยู่ในเว็บไซต์ตอนนี้ (Active Web Visitors) ----------
+  // ---------- จำนวนคนที่อยู่ในเว็บไซต์ตอนนี้ (Active Web Visitors จำกัดสูงสุด 999,999) ----------
   const tabId = 'ro_tab_' + Math.random().toString(36).substring(2, 9);
   function updateActiveVisitors(){
     const now = Date.now();
@@ -489,7 +500,8 @@
         }
       }
       const baseJitter = Math.floor((Math.sin(now / 15000) + 1) * 1.5) + 1; // 1 - 4
-      const totalActive = Math.max(activeTabs, baseJitter);
+      let totalActive = Math.max(activeTabs, baseJitter);
+      if (totalActive > 999999) totalActive = 999999;
       const el = document.getElementById('stWebNum');
       if (el) el.textContent = totalActive.toLocaleString('th-TH');
     } catch(e){
