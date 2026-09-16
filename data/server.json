@@ -1,13 +1,9 @@
 {
-    "online": 2,
+    "online": 1,
     "accounts": 11,
     "characters": 21,
     "guilds": 1,
     "maps": [
-        {
-            "map": "moc_pryd04",
-            "count": 1
-        },
         {
             "map": "prt_fild08",
             "count": 1
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-16T12:53:18+07:00",
-    "views": 2095
+    "updated_at": "2026-09-16T12:54:20+07:00",
+    "views": 2097
 }
