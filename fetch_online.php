@@ -92,8 +92,9 @@ $old = $oldRaw !== false ? json_decode($oldRaw, true) : null;
 $curViews = (isset($old['views']) && is_numeric($old['views'])) ? (int)$old['views'] : 50;
 $ctx = stream_context_create(['http' => ['timeout' => 2]]);
 $hitSvg = @file_get_contents('https://hits.sh/ropvp2026.vercel.app.svg', false, $ctx);
-if ($hitSvg && preg_match('/aria-label="hits:\s*(\d+)"/i', $hitSvg, $hm)) {
-    $curViews = max($curViews, (int)$hm[1]);
+if ($hitSvg && preg_match('/aria-label="hits:\s*([0-9,]+)"/i', $hitSvg, $hm)) {
+    $parsed = (int)str_replace(',', '', $hm[1]);
+    $curViews = max($curViews, $parsed);
 }
 if ($curViews > 999999) { $curViews = (($curViews - 1) % 999999) + 1; }
 $stats['views'] = $curViews;

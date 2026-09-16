@@ -466,20 +466,46 @@
   }
 
   // ---------- ผู้เข้าชมเว็บไซต์: แสดงผลทันที + นับคนดูแบบเรียลไทม์ (ตัน 999,999 แล้วรัน 1 ใหม่) ----------
-  let currentViews = 145;
+  let currentViews = 1735;
   try {
     const saved = parseInt(localStorage.getItem('ro_views') || '0', 10);
-    if (!isNaN(saved) && saved >= 145) currentViews = normalizeViews(saved);
+    // หากค่าเดิมค้างที่ 999 ให้อัปเดตเป็นค่าล่าสุด
+    if (!isNaN(saved) && saved > 0 && saved !== 999) {
+      currentViews = normalizeViews(saved);
+    }
     if (!sessionStorage.getItem('ro_view_counted')) {
       currentViews = normalizeViews(currentViews + 1);
       localStorage.setItem('ro_views', currentViews);
       sessionStorage.setItem('ro_view_counted', '1');
     }
   } catch(e){}
+  
   const elViewsInit = document.getElementById('stViews');
   if (elViewsInit) {
     elViewsInit.textContent = normalizeViews(currentViews).toLocaleString('th-TH');
   }
+
+  // ดึงยอด Real-time Views สดตรงจาก hits.sh
+  async function fetchLiveHits() {
+    try {
+      const res = await fetch('https://hits.sh/ropvp2026.vercel.app.svg?t=' + Date.now());
+      if (res.ok) {
+        const svgText = await res.text();
+        const m = svgText.match(/aria-label="hits:\s*([0-9,]+)"/i);
+        if (m) {
+          const liveHits = normalizeViews(parseInt(m[1].replace(/,/g, ''), 10));
+          if (liveHits > currentViews || currentViews === 999) {
+            currentViews = liveHits;
+            const el = document.getElementById('stViews');
+            if (el) el.textContent = currentViews.toLocaleString('th-TH');
+            try { localStorage.setItem('ro_views', currentViews); } catch(e){}
+          }
+        }
+      }
+    } catch(e){}
+  }
+  fetchLiveHits();
+  setInterval(fetchLiveHits, 15000);
 
   // ---------- จำนวนคนที่อยู่ในเว็บไซต์ตอนนี้ (Active Web Visitors จำกัดสูงสุด 999,999) ----------
   const tabId = 'ro_tab_' + Math.random().toString(36).substring(2, 9);
