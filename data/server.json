@@ -1,6 +1,6 @@
 {
     "online": 0,
-    "accounts": 10,
+    "accounts": 11,
     "characters": 20,
     "guilds": 1,
     "maps": [],
@@ -11,6 +11,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-16T09:56:18+07:00",
+    "updated_at": "2026-09-16T10:05:18+07:00",
     "views": 999
 }
