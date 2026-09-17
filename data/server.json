@@ -5,12 +5,8 @@
     "guilds": 1,
     "maps": [
         {
-            "map": "pvp_n_1-5",
-            "count": 2
-        },
-        {
             "map": "prt_fild08",
-            "count": 1
+            "count": 3
         }
     ],
     "db": true,
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-17T14:49:19+07:00",
-    "views": 6641
+    "updated_at": "2026-09-17T14:50:18+07:00",
+    "views": 6644
 }
