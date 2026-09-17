@@ -2,7 +2,7 @@
     "online": 1,
     "accounts": 17,
     "characters": 32,
-    "guilds": 1,
+    "guilds": 2,
     "maps": [
         {
             "map": "prt_fild08",
@@ -16,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-17T17:06:18+07:00",
-    "views": 7076
+    "updated_at": "2026-09-17T17:07:18+07:00",
+    "views": 7079
 }
