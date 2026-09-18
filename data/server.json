@@ -6,11 +6,7 @@
     "maps": [
         {
             "map": "gef_dun01",
-            "count": 1
-        },
-        {
-            "map": "prt_fild08",
-            "count": 1
+            "count": 2
         }
     ],
     "db": true,
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-18T20:27:19+07:00",
-    "views": 10859
+    "updated_at": "2026-09-18T20:28:18+07:00",
+    "views": 10861
 }
