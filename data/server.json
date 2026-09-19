@@ -12,10 +12,10 @@
     "db": true,
     "server": {
         "login": true,
-        "char": true,
-        "map": true,
-        "online": true
+        "char": false,
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-20T01:12:18+07:00",
-    "views": 13977
+    "updated_at": "2026-09-20T01:13:22+07:00",
+    "views": 13979
 }
