@@ -13,9 +13,9 @@
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-20T16:49:17+07:00",
-    "views": 16142
+    "updated_at": "2026-09-20T16:50:18+07:00",
+    "views": 16145
 }
