@@ -6,20 +6,16 @@
     "maps": [
         {
             "map": "prt_fild08",
-            "count": 2
-        },
-        {
-            "map": "moc_pryd04",
-            "count": 1
+            "count": 3
         }
     ],
     "db": true,
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-20T21:05:18+07:00",
-    "views": 17059
+    "updated_at": "2026-09-20T21:06:19+07:00",
+    "views": 17067
 }
