@@ -3,3 +3,7 @@
 *.zip
 *.rar
 patch_temp.zip
+
+# Exclude temporary sync flag files
+data/flag_changed
+.lastpush
