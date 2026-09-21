@@ -1,5 +1,5 @@
 {
-    "online": 3,
+    "online": 2,
     "accounts": 24,
     "characters": 42,
     "guilds": 4,
@@ -7,10 +7,6 @@
         {
             "map": "prt_fild08",
             "count": 2
-        },
-        {
-            "map": "pvp_n_1-5",
-            "count": 1
         }
     ],
     "db": true,
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-21T17:19:19+07:00",
-    "views": 20570
+    "updated_at": "2026-09-21T17:24:18+07:00",
+    "views": 20590
 }
