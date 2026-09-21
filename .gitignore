@@ -1,3 +1,5 @@
-# ไฟล์ internal ใช้ในเครื่องเท่านั้น ไม่ขึ้น GitHub
-data/flag_changed
-.lastpush
+# Exclude large binaries from Vercel deployment (Vercel max asset limit is ~10MB)
+*.exe
+*.zip
+*.rar
+patch_temp.zip
