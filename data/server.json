@@ -5,8 +5,12 @@
     "guilds": 4,
     "maps": [
         {
+            "map": "moc_pryd04",
+            "count": 1
+        },
+        {
             "map": "prt_fild08",
-            "count": 2
+            "count": 1
         }
     ],
     "db": true,
@@ -16,6 +20,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-24T22:03:19+07:00",
-    "views": 32291
+    "updated_at": "2026-09-24T22:07:19+07:00",
+    "views": 32356
 }
