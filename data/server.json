@@ -1,9 +1,14 @@
 {
-    "online": 0,
+    "online": 1,
     "accounts": 27,
     "characters": 49,
     "guilds": 4,
-    "maps": [],
+    "maps": [
+        {
+            "map": "gef_dun00",
+            "count": 1
+        }
+    ],
     "db": true,
     "server": {
         "login": true,
@@ -11,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-28T21:04:19+07:00",
-    "views": 38616
+    "updated_at": "2026-09-28T21:05:19+07:00",
+    "views": 38617
 }
