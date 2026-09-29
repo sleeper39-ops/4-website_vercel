@@ -1,21 +1,16 @@
 {
-    "online": 1,
+    "online": 0,
     "accounts": 28,
     "characters": 51,
     "guilds": 4,
-    "maps": [
-        {
-            "map": "izlude",
-            "count": 1
-        }
-    ],
+    "maps": [],
     "db": true,
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-29T21:28:18+07:00",
-    "views": 40080
+    "updated_at": "2026-09-29T21:30:19+07:00",
+    "views": 40082
 }
