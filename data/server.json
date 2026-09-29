@@ -1,21 +1,16 @@
 {
-    "online": 1,
+    "online": 0,
     "accounts": 28,
     "characters": 51,
     "guilds": 4,
-    "maps": [
-        {
-            "map": "prt_fild08",
-            "count": 1
-        }
-    ],
+    "maps": [],
     "db": true,
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-09-29T19:26:18+07:00",
-    "views": 39956
+    "updated_at": "2026-09-29T19:34:19+07:00",
+    "views": 39964
 }
