@@ -5,7 +5,7 @@
     "guilds": 4,
     "maps": [
         {
-            "map": "prt_fild08",
+            "map": "gef_dun00",
             "count": 1
         }
     ],
@@ -16,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-30T04:45:18+07:00",
-    "views": 40519
+    "updated_at": "2026-09-30T04:48:19+07:00",
+    "views": 40522
 }
