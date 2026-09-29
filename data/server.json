@@ -1,16 +1,16 @@
 {
     "online": 0,
-    "accounts": 28,
-    "characters": 51,
-    "guilds": 4,
+    "accounts": 0,
+    "characters": 0,
+    "guilds": 0,
     "maps": [],
-    "db": true,
+    "db": false,
     "server": {
         "login": false,
         "char": false,
         "map": false,
         "online": false
     },
-    "updated_at": "2026-09-29T19:35:21+07:00",
-    "views": 39965
+    "updated_at": "2026-09-29T19:37:23+07:00",
+    "views": 39967
 }
