@@ -6,11 +6,11 @@
     "maps": [],
     "db": true,
     "server": {
-        "login": true,
+        "login": false,
         "char": false,
-        "map": true,
+        "map": false,
         "online": false
     },
-    "updated_at": "2026-09-29T21:19:24+07:00",
-    "views": 40071
+    "updated_at": "2026-09-29T21:21:21+07:00",
+    "views": 40073
 }
