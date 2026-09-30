@@ -1,15 +1,11 @@
 {
-    "online": 2,
+    "online": 1,
     "accounts": 28,
     "characters": 52,
     "guilds": 4,
     "maps": [
         {
             "map": "gef_dun01",
-            "count": 1
-        },
-        {
-            "map": "prt_fild08",
             "count": 1
         }
     ],
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-30T14:35:18+07:00",
-    "views": 41111
+    "updated_at": "2026-09-30T14:38:19+07:00",
+    "views": 41114
 }
