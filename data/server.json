@@ -5,7 +5,7 @@
     "guilds": 4,
     "maps": [
         {
-            "map": "iz_dun04",
+            "map": "gef_dun01",
             "count": 1
         }
     ],
@@ -16,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-30T14:29:19+07:00",
+    "updated_at": "2026-09-30T14:30:19+07:00",
     "views": 41105
 }
