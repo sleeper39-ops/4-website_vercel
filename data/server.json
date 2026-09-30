@@ -1,9 +1,14 @@
 {
-    "online": 0,
+    "online": 1,
     "accounts": 29,
     "characters": 52,
     "guilds": 4,
-    "maps": [],
+    "maps": [
+        {
+            "map": "c_tower3",
+            "count": 1
+        }
+    ],
     "db": true,
     "server": {
         "login": true,
@@ -11,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-10-01T04:49:19+07:00",
-    "views": 43028
+    "updated_at": "2026-10-01T04:50:19+07:00",
+    "views": 43047
 }
