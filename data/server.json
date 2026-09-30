@@ -11,11 +11,11 @@
     ],
     "db": true,
     "server": {
-        "login": false,
-        "char": false,
-        "map": false,
-        "online": false
+        "login": true,
+        "char": true,
+        "map": true,
+        "online": true
     },
-    "updated_at": "2026-10-01T04:58:21+07:00",
-    "views": 43063
+    "updated_at": "2026-10-01T05:00:18+07:00",
+    "views": 43067
 }
