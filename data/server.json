@@ -1,13 +1,9 @@
 {
-    "online": 2,
+    "online": 1,
     "accounts": 29,
     "characters": 51,
     "guilds": 4,
     "maps": [
-        {
-            "map": "iz_dun03",
-            "count": 1
-        },
         {
             "map": "prt_fild08",
             "count": 1
@@ -20,6 +16,6 @@
         "map": true,
         "online": true
     },
-    "updated_at": "2026-09-30T21:35:24+07:00",
-    "views": 42120
+    "updated_at": "2026-09-30T21:39:18+07:00",
+    "views": 42131
 }
