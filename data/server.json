@@ -8,9 +8,9 @@
     "server": {
         "login": true,
         "char": true,
-        "map": true,
-        "online": true
+        "map": false,
+        "online": false
     },
-    "updated_at": "2026-10-01T08:36:17+07:00",
-    "views": 43499
+    "updated_at": "2026-10-01T08:40:18+07:00",
+    "views": 43507
 }
