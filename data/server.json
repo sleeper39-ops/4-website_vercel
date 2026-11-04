@@ -7,10 +7,10 @@
     "db": true,
     "server": {
         "login": true,
-        "char": false,
+        "char": true,
         "map": true,
-        "online": false
+        "online": true
     },
-    "updated_at": "2026-11-05T03:37:18+07:00",
-    "views": 121073
+    "updated_at": "2026-11-05T03:38:17+07:00",
+    "views": 121074
 }
